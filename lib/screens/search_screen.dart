@@ -35,7 +35,13 @@ class SearchSreenState extends State<SearchScreen> {
         appBar: AppBar(
           leading: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Image.asset("${AssetsManager.imagePath}/logo.png"),
+            child: ClipOval(
+              child: Image.asset(
+                "${AssetsManager.imagePath}/logo.png",
+                fit: BoxFit
+                    .cover, // Ovo osigurava da slika popuni krug bez rastezanja
+              ),
+            ),
           ),
           title: const Text("Search page"),
         ),

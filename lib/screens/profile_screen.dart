@@ -12,12 +12,22 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   final themeProvider = Provider.of<ThemeProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
-        leading: Image.asset("${AssetsManager.imagePath}/logo.png"),
-        title: Text("Profile"),
+        leading: Padding(
+          padding: const EdgeInsets.all(
+            8.0,
+          ), // Padding da logo ne dodiruje ivice
+          child: ClipOval(
+            child: Image.asset(
+              "${AssetsManager.imagePath}/logo.png",
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        title: const Text("Profile"),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -49,22 +59,23 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       color: Theme.of(context).cardColor,
                       image: DecorationImage(
-                        image: NetworkImage(
+                        /*image: NetworkImage(
                           "https://wallpapers.com/images/featured/cute-aesthetic-profile-pictures-pjfl391j3q0f7rlz.jpg",
-                        ),
+                        ),*/
+                        image:AssetImage("${AssetsManager.imagePath}/profile/mojaSlika.jpg"),
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
-        
+
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       //ovde ide ime i prezime
-                      TitelesTextWidget(label: ""),
+                      TitelesTextWidget(label: "Teodora Kondic"),
                       const SizedBox(width: 4),
                       //ovde ide kao email
-                      SubtitleTextWidget(label: ""),
+                      SubtitleTextWidget(label: "kondic.it53.2023@uns.ac.rs"),
                     ],
                   ),
                 ],
@@ -105,25 +116,27 @@ class ProfileScreen extends StatelessWidget {
                   const TitelesTextWidget(label: "Settings"),
                   const SizedBox(height: 10),
                   SwitchListTile(
-                title: Text(
-                  themeProvider.getIsDarkTheme ? "Dark Theme" : "Light Theme",
-                ),
-                value: themeProvider.getIsDarkTheme,
-                onChanged: (value) {
-                  themeProvider.setDarkTheme(themeValue: value);
-                },
-              ),
+                    title: Text(
+                      themeProvider.getIsDarkTheme
+                          ? "Dark Theme"
+                          : "Light Theme",
+                    ),
+                    value: themeProvider.getIsDarkTheme,
+                    onChanged: (value) {
+                      themeProvider.setDarkTheme(themeValue: value);
+                    },
+                  ),
                   Center(
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.lightCardColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                ),
-                      onPressed: (){}, 
+                        backgroundColor: AppColors.lightPrimary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                      ),
+                      onPressed: () {},
                       label: const Text("Logout"),
-                      icon: const Icon(IconlyLight.logout)
+                      icon: const Icon(IconlyLight.logout),
                     ),
                   ),
                 ],
@@ -135,6 +148,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
+
 class CustomListTile extends StatelessWidget {
   const CustomListTile({
     super.key,
@@ -149,9 +163,8 @@ class CustomListTile extends StatelessWidget {
     return ListTile(
       onTap: () {},
       title: SubtitleTextWidget(label: text),
-      leading: Image.asset( imagePath, height: 34,),
+      leading: Image.asset(imagePath, height: 34),
       trailing: const Icon(IconlyLight.arrowRight2),
     );
   }
 }
-    

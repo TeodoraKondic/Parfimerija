@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/theme_data.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
+import 'package:parfimerija_app/screens/auth/login_screen.dart';
+import 'package:parfimerija_app/screens/auth/register_screen.dart';
 import 'package:parfimerija_app/screens/root_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +32,19 @@ class MyApp extends StatelessWidget {
               isDarkTheme: themeProvider.getIsDarkTheme,
               context: context,
             ),
-            home: const RootScreen(),
+            //home: const RootScreen(),
+            //home: const LoginScreen(),
+            initialRoute: '/login',
+            routes: {
+              '/login': (context) => LoginScreen(
+                onLoginSuccess: () {
+                  // Šta se desi kad se korisnik uloguje
+                  Navigator.pushReplacementNamed(context, '/root');
+                },
+              ),
+              '/register': (context) => const RegisterScreen(),
+              '/root': (context) => const RootScreen(),
+            },
           );
         },
       ),
