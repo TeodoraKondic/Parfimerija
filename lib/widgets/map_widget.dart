@@ -26,11 +26,12 @@ class MapWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Text(
             "Our Location",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            //style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.chocolateDark),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
         const SizedBox(height: 12),
@@ -80,9 +81,3 @@ class MapWidget extends StatelessWidget {
     );
   }
 }
-
-/*
-KLJUC 
-AIzaSyAfLpcuwMP4S5M2z8vaIDYU93ex0kLzScU
-
- */

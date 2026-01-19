@@ -43,7 +43,7 @@ class ProductWidgetState extends State<ProductWidget> {
                   Flexible(
                     flex: 5,
                     child: TitelesTextWidget(
-                      label: "Title " * 10,
+                      label: "Parfume " * 1,
                       fontSize: 18,
                       maxLines: 2,
                     ),

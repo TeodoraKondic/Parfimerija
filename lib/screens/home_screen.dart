@@ -69,13 +69,8 @@ class HomeScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      //backgroundColor:AppColors.lightCardColor.withValues(alpha: 0.2),
       appBar: AppBar(
-        //backgroundColor: AppColors.lightCardColor.withValues(alpha: 0.2),
-        title: const TitelesTextWidget(
-          label: "Parfimerija",
-          color: AppColors.chocolateDark
-        ),
+        title: const TitelesTextWidget(label: "Parfimerija"),
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ClipOval(
@@ -103,9 +98,13 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: TitelesTextWidget(label: "Best-selling perfumes",color: AppColors.chocolateDark),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TitelesTextWidget(
+                label: "Best-selling perfumes",
+                
+                color: Theme.of(context).textTheme.titleLarge?.color,
+              ),
             ),
             // Horizontalna lista najpopularnijih
             SizedBox(
@@ -149,13 +148,17 @@ class HomeScreen extends StatelessWidget {
                           const SizedBox(height: 8),
                           SubtitleTextWidget(
                             label: perfume['title']!,
-                            color: AppColors.chocolateDark,
+                            color: Theme.of(
+                              context,
+                            ).textTheme.titleLarge?.color,
                             fontWeight: FontWeight.bold,
                           ),
                           Text(
                             "${perfume['price']} RSD",
-                            style: const TextStyle(
-                              color: AppColors.chocolateDark,
+                            style: TextStyle(
+                              color: Theme.of(
+                                context,
+                              ).textTheme.titleLarge?.color, // Prati temu
                             ),
                           ),
                         ],
@@ -174,12 +177,12 @@ class HomeScreen extends StatelessWidget {
                   endValue: 12000,
                   suffix: "+",
                   label: "Satisfied\ncustomers",
-                  color: AppColors.chocolateDark,
+                  color: Theme.of(context).textTheme.titleLarge?.color ?? AppColors.chocolateDark, //mora ?? AppColors.chocolateDark jer je colorsafty
                 ),
                 StatCircleWidget(
                   endValue: 8500,
                   label: "Perfumes\nsold",
-                  color: AppColors.chocolateDark,
+                  color: Theme.of(context).textTheme.titleLarge?.color ?? AppColors.chocolateDark,
                 ),
               ],
             ),
@@ -189,9 +192,12 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             // NASLOV
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: TitelesTextWidget(label: "Find Us"),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: TitelesTextWidget(
+                label: "Find Us",
+                color: Theme.of(context).textTheme.titleLarge?.color,
+              ),
             ),
 
             const SizedBox(height: 24),
@@ -200,13 +206,17 @@ class HomeScreen extends StatelessWidget {
             const MapWidget(),
 
             const SizedBox(height: 32),
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: SubtitleTextWidget(label: "Appearance settings:"),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SubtitleTextWidget(
+                label: "Appearance settings:",
+                color: Theme.of(context).textTheme.titleLarge?.color,
+              ),
             ),
             SwitchListTile(
               title: Text(
                 themeProvider.getIsDarkTheme ? "Dark Mode" : "Light Mode",
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               value: themeProvider.getIsDarkTheme,
               onChanged: (value) =>

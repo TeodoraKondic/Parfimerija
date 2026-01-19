@@ -12,16 +12,21 @@ class Styles {
           : AppColors.lightVanilla,
       cardColor: isDarkTheme ? Colors.grey[800] : AppColors.lightVanilla,
       brightness: isDarkTheme ? Brightness.dark : Brightness.light,
+      textTheme: TextTheme(
+        titleLarge: TextStyle(
+          color: isDarkTheme ? AppColors.lightVanilla : AppColors.chocolateDark,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       appBarTheme: AppBarTheme(
         iconTheme: IconThemeData(
-          color: isDarkTheme ? Colors.white : Colors.black,
+          color: isDarkTheme ? AppColors.lightVanilla : AppColors.chocolateDark,
         ),
-        backgroundColor: isDarkTheme
-            ? AppColors.deepGold
-            : AppColors.softAmber,
+        backgroundColor: isDarkTheme ? AppColors.deepGold : AppColors.softAmber,
         elevation: 0,
         titleTextStyle: TextStyle(
-          color: isDarkTheme ? Colors.white : Colors.black,
+          color: isDarkTheme ? AppColors.lightVanilla : AppColors.chocolateDark,
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
@@ -36,7 +41,9 @@ class Styles {
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
             width: 1,
-            color: isDarkTheme ? Colors.white : Colors.black,
+            color: isDarkTheme
+                ? AppColors.lightVanilla
+                : AppColors.chocolateDark,
           ),
           borderRadius: BorderRadius.circular(12),
         ),

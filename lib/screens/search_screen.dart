@@ -43,6 +43,7 @@ class SearchSreenState extends State<SearchScreen> {
               ),
             ),
           ),
+          
           title: const Text("Search page"),
         ),
         body: Padding(

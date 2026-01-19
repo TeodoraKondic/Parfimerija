@@ -20,12 +20,14 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dynamicColor = Theme.of(context).textTheme.titleLarge?.color; //ovde uzmem boju iz teme
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           // Velika slika na vrhu koja se skuplja pri skrolovanju
           SliverAppBar(
             expandedHeight: 400,
+            iconTheme: IconThemeData(color: dynamicColor),
             flexibleSpace: FlexibleSpaceBar(
               background: Image.network(image, fit: BoxFit.cover),
             ),
@@ -38,45 +40,50 @@ class ProductDetailsScreen extends StatelessWidget {
                 children: [
                   Text(
                     brand,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
-                      color: AppColors.chocolateDark,
+                      //color: AppColors.chocolateDark,
+                      color: dynamicColor?.withValues(alpha:0.7),
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.chocolateDark,
+                      //color: AppColors.chocolateDark,
+                      color: Theme.of(context).textTheme.titleLarge?.color,
                     ),
                   ),
                   const SizedBox(height: 12),
                   Text(
                     "$price RSD",
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 22,
-                      color: AppColors.chocolateDark,
+                      //color: AppColors.chocolateDark,
+                      color: Theme.of(context).textTheme.titleLarge?.color,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
+                  Text(
                     "Description of the perfume:",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.chocolateDark,
+                      //color: AppColors.chocolateDark,
+                      color: Theme.of(context).textTheme.titleLarge?.color,
                     ),
                   ),
                   const SizedBox(height: 10),
                   Text(
                     description,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       height: 1.5,
-                      color: AppColors.chocolateDark,
+                      //color: AppColors.chocolateDark,
+                      color: Theme.of(context).textTheme.titleLarge?.color,
                     ),
                   ),
                   const SizedBox(height: 40),
