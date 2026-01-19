@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:parfimerija_app/const/app_colors.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:parfimerija_app/screens/product_details_screen.dart'; // Importuj onaj ekran od malopre
 import 'package:parfimerija_app/services/assets_manager.dart';
+import 'package:parfimerija_app/widgets/circle.dart';
+import 'package:parfimerija_app/widgets/map_widget.dart';
+
 import 'package:parfimerija_app/widgets/subtitle_text.dart';
 import 'package:parfimerija_app/widgets/title_text.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +38,7 @@ class HomeScreen extends StatelessWidget {
       {
         "title": "Black Opium",
         "brand": "Yves Saint Laurent",
-        "price": "11000.0",
+        "price": "11.000",
         "image":
             "https://jasmin.b-cdn.net/media/catalog/product/2/0/200302000139.jpg",
         "desc": "A glam rock fragrance full of mystery and energy.",
@@ -42,7 +46,7 @@ class HomeScreen extends StatelessWidget {
       {
         "title": "Baccarat Rouge 540",
         "brand": "Maison Francis Kurkdjian",
-        "price": "32000.0",
+        "price": "32.000",
         "image":
             "https://metropoliten.rs/upload/catalog/variation/8206/thumb/26955_1_694be90a993c1_980x980r.jpg",
         "desc": "Luminous and sophisticated woody floral scent.",
@@ -50,7 +54,7 @@ class HomeScreen extends StatelessWidget {
       {
         "title": "Eros",
         "brand": "Versace",
-        "price": "8500.0",
+        "price": "8.500",
         "image":
             "https://jasmin.b-cdn.net/media/catalog/product/cache/4456161891bc26600241f10587ca424f/v/e/versace.jpg",
         "desc": "Love, passion, beauty, and desire.",
@@ -58,15 +62,20 @@ class HomeScreen extends StatelessWidget {
       {
         "title": "Light Blue",
         "brand": "Dolce & Gabbana",
-        "price": "9000.0",
+        "price": "9.000",
         "image": "https://pafos.rs/img/products/3423473020264.jpg",
         "desc": "Stunning and overwhelming like the joy of living.",
       },
     ];
 
     return Scaffold(
+      //backgroundColor:AppColors.lightCardColor.withValues(alpha: 0.2),
       appBar: AppBar(
-        title: const TitelesTextWidget(label: "Parfimerija"),
+        //backgroundColor: AppColors.lightCardColor.withValues(alpha: 0.2),
+        title: const TitelesTextWidget(
+          label: "Parfimerija",
+          color: AppColors.chocolateDark
+        ),
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ClipOval(
@@ -96,7 +105,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             const Padding(
               padding: EdgeInsets.all(16.0),
-              child: TitelesTextWidget(label: "Best-selling perfumes"),
+              child: TitelesTextWidget(label: "Best-selling perfumes",color: AppColors.chocolateDark),
             ),
             // Horizontalna lista najpopularnijih
             SizedBox(
@@ -138,10 +147,16 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          SubtitleTextWidget(label: perfume['title']!),
+                          SubtitleTextWidget(
+                            label: perfume['title']!,
+                            color: AppColors.chocolateDark,
+                            fontWeight: FontWeight.bold,
+                          ),
                           Text(
                             "${perfume['price']} RSD",
-                            style: const TextStyle(color: Colors.green),
+                            style: const TextStyle(
+                              color: AppColors.chocolateDark,
+                            ),
                           ),
                         ],
                       ),
@@ -150,6 +165,41 @@ class HomeScreen extends StatelessWidget {
                 },
               ),
             ),
+            const SizedBox(height: 24),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                StatCircleWidget(
+                  endValue: 12000,
+                  suffix: "+",
+                  label: "Satisfied\ncustomers",
+                  color: AppColors.chocolateDark,
+                ),
+                StatCircleWidget(
+                  endValue: 8500,
+                  label: "Perfumes\nsold",
+                  color: AppColors.chocolateDark,
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 32),
+
+            const SizedBox(height: 24),
+
+            // NASLOV
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: TitelesTextWidget(label: "Find Us"),
+            ),
+
+            const SizedBox(height: 24),
+
+            // DODAJ OVDE
+            const MapWidget(),
+
+            const SizedBox(height: 32),
             const Padding(
               padding: EdgeInsets.all(16.0),
               child: SubtitleTextWidget(label: "Appearance settings:"),

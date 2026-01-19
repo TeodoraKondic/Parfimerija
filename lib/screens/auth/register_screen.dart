@@ -22,19 +22,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("Kreiraj nalog", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+              const Text("Create an account", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
               const SizedBox(height: 20),
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(labelText: "Email", border: OutlineInputBorder()),
-                validator: (value) => value!.contains("@") ? null : "Unesite validan email",
+                validator: (value) => value!.contains("@") ? null : "Please enter a valid email",
               ),
               const SizedBox(height: 15),
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
-                decoration: const InputDecoration(labelText: "Lozinka", border: OutlineInputBorder()),
-                validator: (value) => value!.length < 6 ? "Lozinka mora imati 6+ karaktera" : null,
+                decoration: const InputDecoration(labelText: "Password", border: OutlineInputBorder()),
+                validator: (value) => value!.length < 6 ? "Password must be 6+ characters" : null,
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -44,11 +44,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Navigator.pushReplacementNamed(context, '/root');
                   }
                 },
-                child: const Text("Registruj se"),
+                child: const Text("Register"),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text("Već imaš nalog? Prijavi se"),
+                child: const Text("Already have an account? Sign in"),
               )
             ],
           ),

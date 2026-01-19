@@ -8,17 +8,17 @@ class Styles {
   }) {
     return ThemeData(
       scaffoldBackgroundColor: isDarkTheme
-          ? AppColors.darkScaffoldColor
-          : AppColors.lightScaffoldColor,
-      cardColor: isDarkTheme ? Colors.grey[800] : AppColors.lightCardColor,
+          ? AppColors.darkYellowGold
+          : AppColors.lightVanilla,
+      cardColor: isDarkTheme ? Colors.grey[800] : AppColors.lightVanilla,
       brightness: isDarkTheme ? Brightness.dark : Brightness.light,
       appBarTheme: AppBarTheme(
         iconTheme: IconThemeData(
           color: isDarkTheme ? Colors.white : Colors.black,
         ),
         backgroundColor: isDarkTheme
-            ? AppColors.darkScaffoldColor
-            : AppColors.lightScaffoldColor,
+            ? AppColors.deepGold
+            : AppColors.softAmber,
         elevation: 0,
         titleTextStyle: TextStyle(
           color: isDarkTheme ? Colors.white : Colors.black,
