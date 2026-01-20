@@ -19,7 +19,7 @@ class ViewedRecentlyScreen extends StatelessWidget {
               imagePath: "${AssetsManager.imagePath}/bag/checkout.png",
               title: "No viewed products yet",
               subtitle: "Looks like your cart is empty.",
-              buttonText: "Shop now",
+              buttonText: "Shop now", onPressed: () {  },
             ),
           )
         : Scaffold(

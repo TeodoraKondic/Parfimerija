@@ -18,7 +18,7 @@ class CartScreen extends StatelessWidget {
               title: "Your Cart is Empty",
               subtitle:
                   "Looks like you haven't added \n anything to your cart yet.",
-              buttonText: "Shop Now",
+              buttonText: "Shop Now", onPressed: () { Navigator.pushReplacementNamed(context, "/search"); },
             ),
           )
         : Scaffold(
@@ -33,7 +33,8 @@ class CartScreen extends StatelessWidget {
               title: const Text("Your cart"),
               actions: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                  },
                   icon: const Icon(Icons.delete_forever_rounded),
                 ),
               ],

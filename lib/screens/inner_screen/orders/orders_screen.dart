@@ -23,10 +23,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
               imagePath: "${AssetsManager.imagePath}/bag/checkout.png",
               title: "No orders has been placed yet",
               subtitle: "",
-              buttonText: "Shop now",
+              buttonText: "Shop now", onPressed: () {  },
             )
           : ListView.separated(
-              itemCount: 8,
+              itemCount:8 ,
               itemBuilder: (ctx, index) {
                 return const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 2, vertical: 6),

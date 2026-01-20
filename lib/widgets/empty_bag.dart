@@ -6,16 +6,21 @@ import 'package:parfimerija_app/widgets/title_text.dart';
 import 'package:provider/provider.dart';
 
 class EmptyBagWidget extends StatelessWidget {
+  
   const EmptyBagWidget({
     super.key,
     this.imagePath,
     this.subtitle,
     this.title,
-    this.buttonText,
+    this.buttonText, 
+    //required Null Function() onPressed,
+     required this.onPressed,
   });
 
   // ignore: prefer_typing_uninitialized_variables, strict_top_level_inference
   final imagePath, title, subtitle, buttonText;
+  final VoidCallback onPressed;
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +43,8 @@ class EmptyBagWidget extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             // ovde ide šta dugme treba da radi, npr. navigacija
+            
+            onPressed();
             // ignore: avoid_print
             print("Shop now");
           },

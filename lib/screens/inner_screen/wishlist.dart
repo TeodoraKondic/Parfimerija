@@ -19,7 +19,10 @@ class WishlistScreen extends StatelessWidget {
               imagePath: "${AssetsManager.imagePath}/bag/wishlist.png",
               title: "Nothing in your wishlist yet",
               subtitle: "Looks like your wishlist is empty.",
-              buttonText: "Shop now",
+              buttonText: "Shop now", onPressed: () { 
+                Navigator.pushReplacementNamed(context, '/search');
+                
+                },
             ),
           )
         : Scaffold(

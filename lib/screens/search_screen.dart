@@ -8,6 +8,7 @@ import 'package:parfimerija_app/widgets/product/latest_arrival.dart';
 import 'package:provider/provider.dart';
 
 class SearchScreen extends StatefulWidget {
+  static const routName = "/search";
   const SearchScreen({super.key});
 
   @override

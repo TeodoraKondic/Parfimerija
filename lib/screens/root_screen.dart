@@ -67,7 +67,7 @@ class RootScreenState extends State<RootScreen> {
             
             NavigationDestination(
             icon: Badge (
-              backgroundColor: AppColors.darkScaffoldColor,//da onao u indeksu pise mali broj 
+              backgroundColor: AppColors.darkScaffoldColor,//u indeksu pise mali broj 
               label: Text("5"),
               child: Icon(IconlyLight.bag2),
             ),
