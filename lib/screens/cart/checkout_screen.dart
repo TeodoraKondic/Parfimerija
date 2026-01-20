@@ -9,7 +9,6 @@ class CheckoutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // za temu dark/light
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -24,7 +23,7 @@ class CheckoutScreen extends StatelessWidget {
             const SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
-                itemCount: 5, // primer za 5 proizvoda
+                itemCount: 5,
                 itemBuilder: (context, index) => ListTile(
                   leading: CircleAvatar(
                     backgroundColor: isDark ? AppColors.chocolateDark : AppColors.softAmber,
@@ -43,25 +42,33 @@ class CheckoutScreen extends StatelessWidget {
                 TitelesTextWidget(label: "6000 RSD"),
               ],
             ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isDark ? AppColors.chocolateDark : AppColors.softAmber,
-                  foregroundColor: isDark ? AppColors.softAmber : AppColors.chocolateDark,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-                onPressed: () {
-                  // ovde možeš dodati backend checkout ili snackbar
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Checkout successful!")),
-                  );
-                },
-                child: const Text("Place Order"),
-              ),
-            ),
+            
           ],
+        ),
+      ),
+      
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isDark ? AppColors.chocolateDark : AppColors.softAmber,
+                foregroundColor: isDark ? AppColors.softAmber : AppColors.chocolateDark,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12), // Dodao sam malo zaobljenja radi estetike
+                ),
+              ),
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Checkout successful!")),
+                );
+              },
+              child: const Text("Place Order", style: TextStyle(fontWeight: FontWeight.bold),),
+            ),
+          ),
         ),
       ),
     );
