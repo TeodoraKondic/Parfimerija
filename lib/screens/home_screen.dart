@@ -117,7 +117,6 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // --- Kategorije ---
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: TitelesTextWidget(
@@ -150,7 +149,7 @@ class HomeScreen extends StatelessWidget {
                 color: Theme.of(context).textTheme.titleLarge?.color,
               ),
             ),
-            // Horizontalna lista najpopularnijih
+            // lista najpopularnijih
             SizedBox(
               height: 280,
               child: ListView.builder(
@@ -160,7 +159,7 @@ class HomeScreen extends StatelessWidget {
                   final perfume = popularPerfumes[index];
                   return GestureDetector(
                     onTap: () {
-                      // NAVIGACIJA NA DETALJE
+                      
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -202,7 +201,7 @@ class HomeScreen extends StatelessWidget {
                             style: TextStyle(
                               color: Theme.of(
                                 context,
-                              ).textTheme.titleLarge?.color, // Prati temu
+                              ).textTheme.titleLarge?.color, 
                             ),
                           ),
                         ],
@@ -254,23 +253,9 @@ class HomeScreen extends StatelessWidget {
             
             const MapWidget(),
 
-            const SizedBox(height: 32),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SubtitleTextWidget(
-                label: "Appearance settings:",
-                color: Theme.of(context).textTheme.titleLarge?.color,
-              ),
-            ),
-            SwitchListTile(
-              title: Text(
-                themeProvider.getIsDarkTheme ? "Dark Mode" : "Light Mode",
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              value: themeProvider.getIsDarkTheme,
-              onChanged: (value) =>
-                  themeProvider.setDarkTheme(themeValue: value),
-            ),
+            const SizedBox(height: 50),
+            
+          
           ],
         ),
       ),

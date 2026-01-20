@@ -1,5 +1,4 @@
 // ignore_for_file: unused_element
-
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
@@ -38,71 +37,135 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   void _changePassword() {
     if (_formKey.currentState!.validate()) {
-      // backend logika
+      // Ovde ide backend logika za promenu lozinke
       Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Password changed successfully!")),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDark = themeProvider.getIsDarkTheme;
+
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(title: const Text("Change Password")),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextFormField(
+            
+              _buildInputSection(
+                label: "Old Password",
                 controller: _oldPassController,
-                decoration: const InputDecoration(labelText: "Old Password"),
-                obscureText: true,
-                validator: (value) => value!.isEmpty ? "Enter old password" : null,
+                hintText: "Enter your old password",
+                isDark: isDark,
               ),
               const SizedBox(height: 16),
-              TextFormField(
+              
+              _buildInputSection(
+                label: "New Password",
                 controller: _newPassController,
-                decoration: const InputDecoration(labelText: "New Password"),
-                obscureText: true,
-                validator: (value) => value!.isEmpty ? "Enter new password" : null,
+                hintText: "Enter new password",
+                isDark: isDark,
               ),
               const SizedBox(height: 16),
-              TextFormField(
+              
+              _buildInputSection(
+                label: "Confirm Password",
                 controller: _confirmPassController,
-                decoration: const InputDecoration(labelText: "Confirm Password"),
-                obscureText: true,
-                validator: (value) =>
-                    value != _newPassController.text ? "Passwords do not match" : null,
-              ),
-              const SizedBox(height: 30),
-                 Center(
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: themeProvider.getIsDarkTheme
-                        ? AppColors.chocolateDark
-                        : AppColors.softAmber,
-                    foregroundColor: themeProvider.getIsDarkTheme
-                        ? AppColors.softAmber
-                        : AppColors.chocolateDark,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30,
-                      vertical: 12,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onPressed: () {},
-                  label: const Text("Change Password"),
-                  icon: const Icon(IconlyLight.logout),
-                ),
+                hintText: "Repeat new password",
+                isDark: isDark,
+                customValidator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please confirm your password";
+                  }
+                  if (value != _newPassController.text) {
+                    return "Passwords do not match";
+                  }
+                  return null;
+                },
               ),
               
+              const SizedBox(height: 40),
+              
+            
+              Center(
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 55,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.chocolateDark,
+                      foregroundColor: AppColors.softAmber,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: _changePassword,
+                    label: const Text(
+                      "Update Password",
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    icon: const Icon(IconlyLight.lock),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+
+  Widget _buildInputSection({
+    required String label,
+    required TextEditingController controller,
+    required String hintText,
+    required bool isDark,
+    String? Function(String?)? customValidator,
+  }) {
+    final Color contentColor = isDark ? AppColors.softAmber : AppColors.chocolateDark;
+    final Color fieldColor = isDark ? AppColors.chocolateDark : AppColors.softAmber;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            color: contentColor,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: controller,
+          obscureText: true, // Sakriva unos jer je lozinka
+          style: TextStyle(color: contentColor),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: fieldColor,
+            hintText: hintText,
+            hintStyle: TextStyle(color: contentColor.withValues(alpha: 0.5)),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          ),
+          validator: customValidator ?? 
+              (value) => value == null || value.isEmpty ? "$label cannot be empty" : null,
+        ),
+      ],
     );
   }
 }

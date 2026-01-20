@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
 import 'package:parfimerija_app/screens/product_details_screen.dart';
-//import 'package:parfimerija_app/const/app_consts.dart';
 import 'package:parfimerija_app/widgets/product/heart_btn.dart';
 import 'package:parfimerija_app/widgets/subtitle_text.dart';
 import 'package:parfimerija_app/widgets/title_text.dart';
@@ -61,7 +60,7 @@ class LatestArrivalProductsWidget extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        // navigacija na detalje proizvoda
+        
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -94,7 +93,7 @@ class LatestArrivalProductsWidget extends StatelessWidget {
               child: FancyShimmerImage(
                 imageUrl: product["image"]!,
                 width: double.infinity,
-                height: size.width * 0.6, //ovde povecavs sliku
+                height: size.width * 0.6, //ovde povecavm sliku
                 boxFit: BoxFit.cover,
               ),
             ),

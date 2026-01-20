@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:parfimerija_app/main.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:parfimerija_app/screens/auth/register_screen.dart';
@@ -16,113 +17,185 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    final buttonBackground = themeProvider.getIsDarkTheme
-        ? AppColors.lightVanilla
-        : AppColors.chocolateDark;
-
-    final buttonForeground = themeProvider.getIsDarkTheme
-        ? AppColors.chocolateDark
-        : AppColors.softAmber;
-
-    return Scaffold(
-      backgroundColor: themeProvider.getIsDarkTheme
-          ? AppColors.chocolateDark
-          : AppColors.softAmber,
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Application',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: themeProvider.getIsDarkTheme
-                    ? AppColors.softAmber 
-                    : AppColors.chocolateDark,
-              ),
-            ),
-            const SizedBox(height: 30),
-
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: buttonBackground,
-                foregroundColor: buttonForeground,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: () {
-                currentUser = UserType.user; // postavljamo običnog korisnika
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => const RootScreen()),
-                );
-              },
-              child: const Text('Log in'),
-            ),
-
-            const SizedBox(height: 16),
-
-  
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: buttonBackground, 
-              ),
-              onPressed: () {
-                currentUser =
-                    UserType.guest; // postavlja tip korisnika na gosta
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => const RootScreen()),
-                );
-              },
-              child: const Text("Continue as Guest"),
-            ),
-
-            const SizedBox(height: 16),
+    final isDark = themeProvider.getIsDarkTheme;
 
     
-            TextButton(
-              style: TextButton.styleFrom(foregroundColor: buttonBackground),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const RegisterScreen()),
-                );
-              },
-              child: const Text("Don't have an account? Register"),
+    final scaffoldBg = isDark ? AppColors.chocolateDark : AppColors.softAmber;
+    final titleColor = isDark ? AppColors.softAmber : AppColors.chocolateDark;
+    
+    
+    final btnBg = isDark ? AppColors.lightVanilla : AppColors.chocolateDark;
+    final btnFg = isDark ? AppColors.chocolateDark : AppColors.softAmber;
+
+    return Scaffold(
+      backgroundColor: scaffoldBg,
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                
+                Icon(
+                  IconlyBold.login,
+                  size: 80,
+                  color: titleColor,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Welcome Back',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: titleColor,
+                  ),
+                ),
+                const SizedBox(height: 40),
+
+                
+                _buildInputSection(
+                  label: "Email Address",
+                  controller: _emailController,
+                  hintText: "example@mail.com",
+                  isDark: isDark,
+                  icon: IconlyLight.message,
+                ),
+                const SizedBox(height: 20),
+
+                _buildInputSection(
+                  label: "Password",
+                  controller: _passwordController,
+                  hintText: "********",
+                  isDark: isDark,
+                  isPassword: true,
+                  icon: IconlyLight.lock,
+                ),
+                const SizedBox(height: 30),
+
+             
+                SizedBox(
+                  width: double.infinity,
+                  height: 55,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: btnBg,
+                      foregroundColor: btnFg,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 0,
+                    ),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        currentUser = UserType.user;
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (_) => const RootScreen()),
+                        );
+                      }
+                    },
+                    child: const Text(
+                      'Log in',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+            
+                TextButton(
+                  style: TextButton.styleFrom(foregroundColor: titleColor),
+                  onPressed: () {
+                    currentUser = UserType.guest;
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const RootScreen()),
+                    );
+                  },
+                  child: const Text("Continue as Guest", 
+                    style: TextStyle(decoration: TextDecoration.underline)),
+                ),
+
+                const SizedBox(height: 10),
+
+                
+                TextButton(
+                  style: TextButton.styleFrom(foregroundColor: titleColor),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const RegisterScreen()),
+                    );
+                  },
+                  child: const Text("Don't have an account? Register"),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildInputSection({
+    required String label,
+    required TextEditingController controller,
+    required String hintText,
+    required bool isDark,
+    required IconData icon,
+    bool isPassword = false,
+  }) {
+    
+    final Color contentColor = isDark ? AppColors.softAmber : AppColors.chocolateDark;
+    final Color fieldColor = isDark ? const Color(0xFF3E2723) : Colors.white.withValues(alpha:0.5);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            color: contentColor,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: controller,
+          obscureText: isPassword,
+          style: TextStyle(color: contentColor),
+          decoration: InputDecoration(
+            prefixIcon: Icon(icon, color: contentColor),
+            filled: true,
+            fillColor: fieldColor,
+            hintText: hintText,
+            hintStyle: TextStyle(color: contentColor.withValues(alpha:0.4)),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          ),
+          validator: (value) =>
+              value == null || value.isEmpty ? "$label is required" : null,
+        ),
+      ],
     );
   }
 }

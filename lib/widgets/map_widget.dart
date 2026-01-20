@@ -6,9 +6,8 @@ import 'package:parfimerija_app/const/app_colors.dart';
 class MapWidget extends StatelessWidget {
   const MapWidget({super.key});
 
-  // Funkcija za otvaranje navigacije
   Future<void> _openMap() async {
-    // Koordinate tvoje parfimerije (primer za Novi Sad)
+    
     const double lat = 45.2671; 
     const double lng = 19.8335;
     final Uri url = Uri.parse('google.navigation:q=$lat,$lng');
@@ -30,7 +29,7 @@ class MapWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Text(
             "Our Location",
-            //style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.chocolateDark),
+            
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
@@ -62,7 +61,7 @@ class MapWidget extends StatelessWidget {
                   },
                 ),
               ),
-              // Dugme za navigaciju u uglu mape
+              
               Positioned(
                 bottom: 12,
                 right: 12,

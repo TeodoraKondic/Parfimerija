@@ -45,74 +45,105 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDark = themeProvider.getIsDarkTheme;
+
     return Scaffold(
       appBar: AppBar(title: const Text("Edit Profile")),
-      body: Padding(
+      body: SingleChildScrollView( // Dodato da tastatura ne bi prekrila polja
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              
-              const Text(
-                "Full Name",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
+              // Koristimo istu metodu za polja kao u admin panelu
+              _buildInputSection(
+                label: "Full Name",
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  hintText: "Enter your full name",
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) =>
-                    value!.isEmpty ? "Name cannot be empty" : null,
+                hintText: "Enter your full name",
+                isDark: isDark,
               ),
-              const SizedBox(height: 20),
-
+              const SizedBox(height: 16),
               
-              const Text(
-                "Email",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
+              _buildInputSection(
+                label: "Email",
                 controller: _emailController,
-                decoration: const InputDecoration(
-                  hintText: "Enter your email",
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) =>
-                    value!.isEmpty ? "Email cannot be empty" : null,
+                hintText: "Enter your email",
+                isDark: isDark,
               ),
-              const SizedBox(height: 30),
+              
+              const SizedBox(height: 40),
+              
               Center(
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: themeProvider.getIsDarkTheme
-                        ? AppColors.chocolateDark
-                        : AppColors.softAmber,
-                    foregroundColor: themeProvider.getIsDarkTheme
-                        ? AppColors.softAmber
-                        : AppColors.chocolateDark,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30,
-                      vertical: 12,
+                child: SizedBox(
+                  width: double.infinity, // Dugme preko cele širine
+                  height: 55,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.chocolateDark,
+                      foregroundColor: AppColors.softAmber,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                    onPressed: _saveProfile,
+                    label: const Text(
+                      "Save Changes",
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
+                    icon: const Icon(IconlyLight.tickSquare), // Promenjena ikonica na kvačicu
                   ),
-                  onPressed: () {},
-                  label: const Text("Save"),
-                  icon: const Icon(IconlyLight.logout),
                 ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  // Pomoćna metoda za kreiranje sekcije polja (isti stil kao admin)
+  Widget _buildInputSection({
+    required String label,
+    required TextEditingController controller,
+    required String hintText,
+    required bool isDark,
+  }) {
+    // Boja teksta iznad polja i unutar polja
+    final Color contentColor = isDark ? AppColors.softAmber : AppColors.chocolateDark;
+    // Boja pozadine samog polja
+    final Color fieldColor = isDark ? AppColors.chocolateDark : AppColors.softAmber;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            color: contentColor,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: controller,
+          style: TextStyle(color: contentColor),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: fieldColor,
+            hintText: hintText,
+            hintStyle: TextStyle(color: contentColor.withValues(alpha:0.5)),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          ),
+          validator: (value) =>
+              value == null || value.isEmpty ? "$label cannot be empty" : null,
+        ),
+      ],
     );
   }
 }

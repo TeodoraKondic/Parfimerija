@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
               AddressScreen.routName: (ctx) => const AddressScreen(),
               EditProfileScreen.routName: (context) => const EditProfileScreen(),
               ChangePasswordScreen.routName: (context) =>const ChangePasswordScreen(),
-              //SearchScreen.routName: (context) => const SearchScreen()
+    
               
             },
           );

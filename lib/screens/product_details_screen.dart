@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
-import 'package:parfimerija_app/screens/admin/edit_parfume.dart';
-//import 'package:parfimerija_app/main.dart';
+import 'package:parfimerija_app/screens/admin/edit_perfume.dart';
+
 
 class ProductDetailsScreen extends StatelessWidget {
-  // Ovi podaci će biti prosleđeni kada klikneš na parfem
+  
   final String title;
   final String brand;
   final String price;
@@ -24,7 +24,7 @@ class ProductDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final dynamicColor = Theme.of(
       context,
-    ).textTheme.titleLarge?.color; //ovde uzmem boju iz teme
+    ).textTheme.titleLarge?.color; 
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -46,7 +46,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     brand,
                     style: TextStyle(
                       fontSize: 18,
-                      //color: AppColors.chocolateDark,
+                      
                       color: dynamicColor?.withValues(alpha: 0.7),
                     ),
                   ),
@@ -56,7 +56,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      //color: AppColors.chocolateDark,
+                      
                       color: Theme.of(context).textTheme.titleLarge?.color,
                     ),
                   ),
@@ -65,7 +65,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     "$price RSD",
                     style: TextStyle(
                       fontSize: 22,
-                      //color: AppColors.chocolateDark,
+                      
                       color: Theme.of(context).textTheme.titleLarge?.color,
                       fontWeight: FontWeight.bold,
                     ),
@@ -76,7 +76,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      //color: AppColors.chocolateDark,
+                      
                       color: Theme.of(context).textTheme.titleLarge?.color,
                     ),
                   ),
@@ -86,13 +86,13 @@ class ProductDetailsScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       height: 1.5,
-                      //color: AppColors.chocolateDark,
+                      
                       color: Theme.of(context).textTheme.titleLarge?.color,
                     ),
                   ),
                   const SizedBox(height: 40),
 
-                  // Dugme za korpu
+                  
                   SizedBox(
                     width: double.infinity,
                     height: 50,
@@ -143,12 +143,14 @@ class ProductDetailsScreen extends StatelessWidget {
                             ),
                           ),
                         );
+                        // ignore: avoid_print
                         print("Admin clicked Edit Perfume: $title");
                       },
                       icon: const Icon(Icons.edit),
                       label: const Text("Edit Perfume"),
                     ),
                   ),
+                  const SizedBox(height: 60),
                 ],
               ),
             ),

@@ -10,10 +10,7 @@ import 'package:parfimerija_app/screens/inner_screen/edit_profile/profile_header
 import 'package:parfimerija_app/screens/inner_screen/orders/orders_screen.dart';
 import 'package:parfimerija_app/screens/inner_screen/viewed_recently.dart';
 import 'package:parfimerija_app/screens/inner_screen/wishlist.dart';
-//import 'package:parfimerija_app/screens/inner_screen/change_password_screen.dart';
-//import 'package:parfimerija_app/screens/inner_screen/edit_profile_screen.dart';
 import 'package:parfimerija_app/services/assets_manager.dart';
-//import 'package:parfimerija_app/widgets/profile_header_widget.dart';
 import 'package:parfimerija_app/widgets/subtitle_text.dart';
 import 'package:parfimerija_app/widgets/title_text.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +38,7 @@ class ProfileScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // ----- Profile Header -----
+            
             ProfileHeaderWidget(
               name: "Teodora Kondic",
               email: "kondic.it53.2023@uns.ac.rs",
@@ -58,7 +55,7 @@ class ProfileScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ----- General -----
+                  
                   const TitelesTextWidget(label: "General"),
                   const SizedBox(height: 10),
                   CustomListTile(
@@ -122,7 +119,7 @@ class ProfileScreen extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  // ----- Logout -----
+                
                   Center(
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
@@ -160,7 +157,7 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-// ----- Custom List Tile -----
+
 class CustomListTile extends StatelessWidget {
   const CustomListTile({
     super.key,

@@ -44,7 +44,7 @@ class ViewedRecentlyScreen extends StatelessWidget {
                 mainAxisSpacing: 12,
                 crossAxisSpacing: 12,
                 builder: (context, index) {
-                  return const ProductWidget(); // koristi tvoj ProductWidget
+                  return const ProductWidget(); 
                 },
                 itemCount: 20, // broj proizvoda koje želiš da prikažeš
                 crossAxisCount: 2,

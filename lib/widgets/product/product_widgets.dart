@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
-//import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
 import 'package:parfimerija_app/const/app_consts.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
@@ -75,10 +74,10 @@ class ProductWidgetState extends State<ProductWidget> {
                   Flexible(
                     child: Material(
                       borderRadius: BorderRadius.circular(12.0),
-                      //color: AppColors.lightVanilla,
+                     
                       color: Provider.of<ThemeProvider>(context).getIsDarkTheme
                           ? AppColors
-                                .lightVanilla // tamna boja u dark mode
+                                .lightVanilla 
                           : AppColors.chocolateDark,
                       child: InkWell(
                         borderRadius: BorderRadius.circular(12.0),
@@ -86,9 +85,9 @@ class ProductWidgetState extends State<ProductWidget> {
                         splashColor:
                             Provider.of<ThemeProvider>(context).getIsDarkTheme
                             ? AppColors
-                                  .chocolateDark // svetli splash u dark mode
+                                  .chocolateDark 
                             : AppColors.lightVanilla,
-                        //AppColors.chocolateDark,
+                        
                         child: Padding(
                           padding: const EdgeInsets.all(6.0),
                           child: Icon(
@@ -98,7 +97,7 @@ class ProductWidgetState extends State<ProductWidget> {
                                   context,
                                 ).getIsDarkTheme
                                 ? AppColors
-                                      .chocolateDark // svetla ikona u dark mode
+                                      .chocolateDark 
                                 : AppColors.lightVanilla,
                           ),
                         ),
