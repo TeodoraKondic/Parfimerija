@@ -97,7 +97,7 @@ class SearchSreenState extends State<SearchScreen> {
                     ),
                     const SizedBox(height: 50.0),
 
-                    // 4. Most Popular
+                  
                     Text(
                       "Most Popular",
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(

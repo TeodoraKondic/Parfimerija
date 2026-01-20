@@ -5,7 +5,7 @@ import 'package:parfimerija_app/screens/product_details_screen.dart'; // Importu
 import 'package:parfimerija_app/services/assets_manager.dart';
 import 'package:parfimerija_app/widgets/circle.dart';
 import 'package:parfimerija_app/widgets/map_widget.dart';
-import 'package:parfimerija_app/widgets/products/CategoryListWidget.dart';
+import 'package:parfimerija_app/widgets/products/category_list_widget.dart';
 
 import 'package:parfimerija_app/widgets/subtitle_text.dart';
 import 'package:parfimerija_app/widgets/title_text.dart';
@@ -131,7 +131,7 @@ class HomeScreen extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 itemCount: categories.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 16),
+                separatorBuilder: (_, _) => const SizedBox(width: 16),
                 itemBuilder: (context, index) {
                   final category = categories[index];
                   return CategoryRoundedWidget(
@@ -240,7 +240,7 @@ class HomeScreen extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // NASLOV
+            
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: TitelesTextWidget(
@@ -251,7 +251,7 @@ class HomeScreen extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // DODAJ OVDE
+            
             const MapWidget(),
 
             const SizedBox(height: 32),

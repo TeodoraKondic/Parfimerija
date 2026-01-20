@@ -3,6 +3,12 @@ import 'package:parfimerija_app/const/theme_data.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:parfimerija_app/screens/auth/login_screen.dart';
 import 'package:parfimerija_app/screens/auth/register_screen.dart';
+import 'package:parfimerija_app/screens/inner_screen/address_screen.dart';
+import 'package:parfimerija_app/screens/inner_screen/edit_profile/change_password_screen.dart';
+import 'package:parfimerija_app/screens/inner_screen/edit_profile/edit_profile_screen.dart';
+import 'package:parfimerija_app/screens/inner_screen/orders/orders_screen.dart';
+import 'package:parfimerija_app/screens/inner_screen/viewed_recently.dart';
+import 'package:parfimerija_app/screens/inner_screen/wishlist.dart';
 import 'package:parfimerija_app/screens/root_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -44,6 +50,16 @@ class MyApp extends StatelessWidget {
               ),
               '/register': (context) => const RegisterScreen(),
               '/root': (context) => const RootScreen(),
+
+              WishlistScreen.routName: (ctx) => const WishlistScreen(),
+              ViewedRecentlyScreen.routName: (ctx) =>
+                  const ViewedRecentlyScreen(),
+              OrdersScreen.routName: (ctx) => const OrdersScreen(),
+              AddressScreen.routName: (ctx) => const AddressScreen(),
+              EditProfileScreen.routName: (context) =>
+                  const EditProfileScreen(),
+              ChangePasswordScreen.routName: (context) =>
+                  const ChangePasswordScreen(),
             },
           );
         },

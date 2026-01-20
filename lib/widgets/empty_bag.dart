@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
+import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:parfimerija_app/widgets/subtitle_text.dart';
 import 'package:parfimerija_app/widgets/title_text.dart';
+import 'package:provider/provider.dart';
 
 class EmptyBagWidget extends StatelessWidget {
   const EmptyBagWidget({
@@ -33,14 +35,25 @@ class EmptyBagWidget extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Center(child: SubtitleTextWidget(label: subtitle)),
         ),
-        const SizedBox(height: 20),
         ElevatedButton(
+          onPressed: () {
+            // ovde ide šta dugme treba da radi, npr. navigacija
+            // ignore: avoid_print
+            print("Shop now");
+          },
           style: ElevatedButton.styleFrom(
-            elevation: 0,
-            backgroundColor: AppColors.lightCardColor,
+            backgroundColor: Provider.of<ThemeProvider>(context).getIsDarkTheme
+                ? AppColors.chocolateDark
+                : AppColors.softAmber,
+            foregroundColor: Provider.of<ThemeProvider>(context).getIsDarkTheme
+                ? AppColors.softAmber
+                : AppColors.chocolateDark,
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
-          onPressed: () {},
-          child: Text(buttonText, style: const TextStyle(color: Colors.white)),
+          child: Text(buttonText),
         ),
       ],
     );

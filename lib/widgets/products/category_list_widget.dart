@@ -24,8 +24,8 @@ class CategoryRoundedWidget extends StatelessWidget {
 
     // Opcionalno: boja pozadine kruga
     final circleBgColor = themeProvider.getIsDarkTheme
-        ? AppColors.chocolateDark.withOpacity(0.2)
-        : AppColors.softAmber.withOpacity(0.2);
+        ? AppColors.chocolateDark.withValues(alpha:0.2)
+        : AppColors.softAmber..withValues(alpha:0.2);
 
     return Column(
       children: [
