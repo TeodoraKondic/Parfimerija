@@ -5,6 +5,7 @@ import 'package:parfimerija_app/screens/product_details_screen.dart'; // Importu
 import 'package:parfimerija_app/services/assets_manager.dart';
 import 'package:parfimerija_app/widgets/circle.dart';
 import 'package:parfimerija_app/widgets/map_widget.dart';
+import 'package:parfimerija_app/widgets/products/CategoryListWidget.dart';
 
 import 'package:parfimerija_app/widgets/subtitle_text.dart';
 import 'package:parfimerija_app/widgets/title_text.dart';
@@ -67,6 +68,24 @@ class HomeScreen extends StatelessWidget {
         "desc": "Stunning and overwhelming like the joy of living.",
       },
     ];
+    final List<Map<String, String>> categories = [
+      {
+        "image": "${AssetsManager.imagePath}/categories/floral.png",
+        "name": "Floral",
+      },
+      {
+        "image": "${AssetsManager.imagePath}/categories/vanilla.png",
+        "name": "Sweet",
+      },
+      {
+        "image": "${AssetsManager.imagePath}/categories/woody.png",
+        "name": "Woody",
+      },
+      {
+        "image": "${AssetsManager.imagePath}/categories/citrus.png",
+        "name": "Citrus",
+      },
+    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -98,11 +117,36 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // --- Kategorije ---
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TitelesTextWidget(
+                label: "Categories",
+                color: Theme.of(context).textTheme.titleLarge?.color,
+              ),
+            ),
+            SizedBox(
+              height: 90,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: categories.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 16),
+                itemBuilder: (context, index) {
+                  final category = categories[index];
+                  return CategoryRoundedWidget(
+                    image: category['image']!,
+                    name: category['name']!,
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 24),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: TitelesTextWidget(
                 label: "Best-selling perfumes",
-                
+
                 color: Theme.of(context).textTheme.titleLarge?.color,
               ),
             ),
@@ -177,12 +221,17 @@ class HomeScreen extends StatelessWidget {
                   endValue: 12000,
                   suffix: "+",
                   label: "Satisfied\ncustomers",
-                  color: Theme.of(context).textTheme.titleLarge?.color ?? AppColors.chocolateDark, //mora ?? AppColors.chocolateDark jer je colorsafty
+                  color:
+                      Theme.of(context).textTheme.titleLarge?.color ??
+                      AppColors
+                          .chocolateDark, //mora ?? AppColors.chocolateDark jer je colorsafty
                 ),
                 StatCircleWidget(
                   endValue: 8500,
                   label: "Perfumes\nsold",
-                  color: Theme.of(context).textTheme.titleLarge?.color ?? AppColors.chocolateDark,
+                  color:
+                      Theme.of(context).textTheme.titleLarge?.color ??
+                      AppColors.chocolateDark,
                 ),
               ],
             ),

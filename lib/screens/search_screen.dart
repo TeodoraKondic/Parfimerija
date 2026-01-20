@@ -1,8 +1,11 @@
 import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
 import 'package:flutter/material.dart';
+import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
 import 'package:parfimerija_app/services/assets_manager.dart';
 import 'package:parfimerija_app/widgets/product/product_widgets.dart';
+import 'package:parfimerija_app/widgets/product/latest_arrival.dart';
+import 'package:provider/provider.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -13,6 +16,7 @@ class SearchScreen extends StatefulWidget {
 
 class SearchSreenState extends State<SearchScreen> {
   late TextEditingController searchTextController;
+
   @override
   void initState() {
     searchTextController = TextEditingController();
@@ -28,9 +32,7 @@ class SearchSreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
           leading: Padding(
@@ -38,54 +40,85 @@ class SearchSreenState extends State<SearchScreen> {
             child: ClipOval(
               child: Image.asset(
                 "${AssetsManager.imagePath}/logo.png",
-                fit: BoxFit
-                    .cover, // Ovo osigurava da slika popuni krug bez rastezanja
+                fit: BoxFit.cover,
               ),
             ),
           ),
-          
-          title: const Text("Search page"),
+          title: const Text("Search screen"),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 15.0),
-              TextField(
-                controller: searchTextController,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: GestureDetector(
-                    onTap: () {
-                      //setState(() {
-                      FocusScope.of(context).unfocus();
-                      searchTextController.clear();
-                      //});
-                    },
-                    child: const Icon(
-                      Icons.clear,
-                      color: AppColors.lightCardColor,
+          padding: const EdgeInsets.all(12.0),
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      controller: searchTextController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor:
+                            Provider.of<ThemeProvider>(context).getIsDarkTheme
+                            ? AppColors.chocolateDark
+                            : AppColors.softAmber,
+                        prefixIcon: const Icon(Icons.search),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            FocusScope.of(context).unfocus();
+                            searchTextController.clear();
+                          },
+                          icon: const Icon(Icons.clear),
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 25.0),
+
+                    Text(
+                      "Latest Arrivals",
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    SizedBox(
+                      height: 330,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: latestArrivals.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 16.0),
+                            child: LatestArrivalProductsWidget(index: index),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 50.0),
+
+                    // 4. Most Popular
+                    Text(
+                      "Most Popular",
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
                 ),
-                onChanged: (value) {
-                  // log("value of the text is $value");
-                },
-                onSubmitted: (value) {
-                  // log("value of the text is $value");
-                  // log("value of the controller text:"${searchTextController.text}");
-                },
               ),
-              const SizedBox(height: 15.0),
-              Expanded(
-                child: DynamicHeightGridView(
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
+
+              SliverPadding(
+                padding: const EdgeInsets.only(bottom: 20),
+                sliver: SliverDynamicHeightGridView(
+                  itemCount: 5,
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
                   builder: (context, index) {
                     return const ProductWidget();
                   },
-                  itemCount: 200,
-                  crossAxisCount: 2,
                 ),
               ),
             ],

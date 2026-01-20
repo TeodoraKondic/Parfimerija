@@ -2,11 +2,14 @@ import 'dart:developer';
 
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
+//import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
 import 'package:parfimerija_app/const/app_consts.dart';
+import 'package:parfimerija_app/providers/theme_providers.dart';
+import 'package:parfimerija_app/widgets/product/heart_btn.dart';
 import 'package:parfimerija_app/widgets/subtitle_text.dart';
 import 'package:parfimerija_app/widgets/title_text.dart';
+import 'package:provider/provider.dart';
 
 class ProductWidget extends StatefulWidget {
   const ProductWidget({super.key});
@@ -46,14 +49,11 @@ class ProductWidgetState extends State<ProductWidget> {
                       label: "Parfume " * 1,
                       fontSize: 18,
                       maxLines: 2,
+                      color: Theme.of(context).textTheme.titleLarge?.color,
                     ),
                   ),
-                  Flexible(
-                    flex: 2,
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(IconlyLight.heart),
-                    ),
+                  Flexible(flex: 2, child: const HeartButtonWidget()
+                    
                   ),
                 ],
               ),
@@ -64,25 +64,43 @@ class ProductWidgetState extends State<ProductWidget> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Flexible(
+                  Flexible(
                     flex: 1,
                     child: SubtitleTextWidget(
                       label: "1200 RSD",
                       fontWeight: FontWeight.w600,
-                      color: AppColors.darkScaffoldColor,
+                      color: Theme.of(context).textTheme.titleLarge?.color,
                     ),
                   ),
                   Flexible(
                     child: Material(
                       borderRadius: BorderRadius.circular(12.0),
-                      color: AppColors.lightPrimary,
+                      //color: AppColors.lightVanilla,
+                      color: Provider.of<ThemeProvider>(context).getIsDarkTheme
+                          ? AppColors
+                                .lightVanilla // tamna boja u dark mode
+                          : AppColors.chocolateDark,
                       child: InkWell(
                         borderRadius: BorderRadius.circular(12.0),
                         onTap: () {},
-                        splashColor: Colors.blueGrey,
-                        child: const Padding(
-                          padding: EdgeInsets.all(6.0),
-                          child: Icon(Icons.add_shopping_cart_outlined),
+                        splashColor:
+                            Provider.of<ThemeProvider>(context).getIsDarkTheme
+                            ? AppColors
+                                  .chocolateDark // svetli splash u dark mode
+                            : AppColors.lightVanilla,
+                        //AppColors.chocolateDark,
+                        child: Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Icon(
+                            Icons.add_shopping_cart_outlined,
+                            color:
+                                Provider.of<ThemeProvider>(
+                                  context,
+                                ).getIsDarkTheme
+                                ? AppColors
+                                      .chocolateDark // svetla ikona u dark mode
+                                : AppColors.lightVanilla,
+                          ),
                         ),
                       ),
                     ),
