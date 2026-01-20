@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
+import 'package:parfimerija_app/screens/admin/edit_parfume.dart';
 //import 'package:parfimerija_app/main.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
@@ -97,14 +98,10 @@ class ProductDetailsScreen extends StatelessWidget {
                     height: 50,
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors
-                            .chocolateDark, 
-                        foregroundColor: AppColors
-                            .softAmber, 
+                        backgroundColor: AppColors.chocolateDark,
+                        foregroundColor: AppColors.softAmber,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            12,
-                          ), 
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                       onPressed: () {
@@ -126,16 +123,26 @@ class ProductDetailsScreen extends StatelessWidget {
                     height: 50,
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            AppColors.chocolateDark, // tamna pozadina dugmeta
-                        foregroundColor:
-                            AppColors.softAmber, // boja ikone i teksta
+                        backgroundColor: AppColors.chocolateDark,
+                        foregroundColor: AppColors.softAmber,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                       onPressed: () {
                         // ignore: avoid_print
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditPerfumeScreen(
+                              title: title,
+                              brand: brand,
+                              price: price,
+                              description: description,
+                              image: image,
+                            ),
+                          ),
+                        );
                         print("Admin clicked Edit Perfume: $title");
                       },
                       icon: const Icon(Icons.edit),
