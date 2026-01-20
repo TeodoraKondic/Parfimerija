@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
+//import 'package:parfimerija_app/main.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   // Ovi podaci će biti prosleđeni kada klikneš na parfem
@@ -20,7 +21,9 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dynamicColor = Theme.of(context).textTheme.titleLarge?.color; //ovde uzmem boju iz teme
+    final dynamicColor = Theme.of(
+      context,
+    ).textTheme.titleLarge?.color; //ovde uzmem boju iz teme
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -43,7 +46,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       //color: AppColors.chocolateDark,
-                      color: dynamicColor?.withValues(alpha:0.7),
+                      color: dynamicColor?.withValues(alpha: 0.7),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -95,17 +98,16 @@ class ProductDetailsScreen extends StatelessWidget {
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors
-                            .chocolateDark, // Pozadina dugmeta (tvoja boja #7B3F00)
+                            .chocolateDark, 
                         foregroundColor: AppColors
-                            .softAmber, // Boja slova i ikonice (svetlo žuta)
+                            .softAmber, 
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
                             12,
-                          ), // Da ivice budu malo zaobljene
+                          ), 
                         ),
                       ),
                       onPressed: () {
-                        // Ovde ćeš u CP3 dodati logiku za korpu
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text("Added to cart!")),
                         );
@@ -113,6 +115,31 @@ class ProductDetailsScreen extends StatelessWidget {
 
                       icon: const Icon(Icons.shopping_bag),
                       label: const Text("Add to cart"),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Dugme za izmenu parfema (samo admin)
+                  //if (currentUser == UserType.admin)
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            AppColors.chocolateDark, // tamna pozadina dugmeta
+                        foregroundColor:
+                            AppColors.softAmber, // boja ikone i teksta
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: () {
+                        // ignore: avoid_print
+                        print("Admin clicked Edit Perfume: $title");
+                      },
+                      icon: const Icon(Icons.edit),
+                      label: const Text("Edit Perfume"),
                     ),
                   ),
                 ],

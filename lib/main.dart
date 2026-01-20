@@ -13,6 +13,13 @@ import 'package:parfimerija_app/screens/inner_screen/wishlist.dart';
 import 'package:parfimerija_app/screens/root_screen.dart';
 import 'package:parfimerija_app/screens/search_screen.dart';
 import 'package:provider/provider.dart';
+enum UserType {
+  guest,
+  user,
+  admin,
+}
+
+UserType currentUser = UserType.guest;
 
 void main() {
   runApp(const MyApp());
