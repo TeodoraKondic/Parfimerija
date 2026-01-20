@@ -24,121 +24,111 @@ class _CardWidgetState extends State<CardWidget> {
     Size size = MediaQuery.of(context).size;
     final isDark = Provider.of<ThemeProvider>(context).getIsDarkTheme;
 
-    return FittedBox(
-      child: IntrinsicWidth(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12.0),
-                child: FancyShimmerImage(
-                  imageUrl: AppConstants.imageUrl,
-                  height: size.height * 0.2,
-                  width: size.height * 0.2,
-                  boxFit: BoxFit.contain,
-                ),
-              ),
-              const SizedBox(width: 10),
-              IntrinsicWidth(
-                child: Column(
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12.0),
+            child: FancyShimmerImage(
+              imageUrl: AppConstants.imageUrl,
+              height: size.height * 0.15,
+              width: size.height * 0.15,
+              boxFit: BoxFit.contain,
+            ),
+          ),
+          const SizedBox(width: 10),
+
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: size.width * 0.6,
-                          child: TitelesTextWidget(
-                            label: "Perfume",
-                            maxLines: 2,
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            IconButton(
-                              style: IconButton.styleFrom(elevation: 10),
-                              onPressed: () {
-                                setState(() {
-                                  isLiked = !isLiked;
-                                });
-                              },
-                              icon: Icon(
-                                isLiked
-                                    ? IconlyBold.heart
-                                    : IconlyLight
-                                          .heart, // Puno srce kad je lajkovano
-                                color: isLiked
-                                    ? Colors.red
-                                    : (isDark
-                                          ? AppColors.lightVanilla
-                                          : AppColors.chocolateDark),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                    Expanded(
+                      child: TitelesTextWidget(
+                        label: "Perfume Name",
+                        maxLines: 2,
+                      ),
                     ),
-                    Row(
-                      children: [
-                        SubtitleTextWidget(
-                          label: "1200 RSD",
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isLiked = !isLiked;
+                        });
+                      },
+                      icon: Icon(
+                        isLiked ? IconlyBold.heart : IconlyLight.heart,
+                        color: isLiked
+                            ? Colors.red
+                            : (isDark ? Colors.white : Colors.black),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+
+                Row(
+                  children: [
+                    SubtitleTextWidget(
+                      label: "1200 RSD",
+                      color: isDark
+                          ? AppColors.softAmber
+                          : AppColors.chocolateDark,
+                    ),
+                    const Spacer(),
+                    OutlinedButton.icon(
+                      onPressed: () async {
+                        await showModalBottomSheet(
+                          backgroundColor: Theme.of(
+                            context,
+                          ).scaffoldBackgroundColor,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30),
+                            ),
+                          ),
+                          context: context,
+                          builder: (context) {
+                            return const QuantityBottomSheetWidget();
+                          },
+                        );
+                      },
+                      icon: Icon(
+                        IconlyLight.arrowDown2,
+                        color: isDark
+                            ? AppColors.softAmber
+                            : AppColors.chocolateDark,
+                      ),
+                      label: Text(
+                        "Quantity: 5",
+                        style: TextStyle(
                           color: isDark
                               ? AppColors.softAmber
                               : AppColors.chocolateDark,
                         ),
-                        const Spacer(),
-                        OutlinedButton.icon(
-                          onPressed: () async {
-                            await showModalBottomSheet(
-                              backgroundColor: Theme.of(
-                                context,
-                              ).scaffoldBackgroundColor,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(30),
-                                  topRight: Radius.circular(30),
-                                ),
-                              ),
-                              context: context,
-                              builder: (context) {
-                                return const QuantityBottomSheetWidget();
-                              },
-                            );
-                          },
-                          icon: Icon(
-                            IconlyLight.arrowDown2,
-                            color: isDark
-                                ? AppColors.softAmber
-                                : AppColors.chocolateDark,
-                          ),
-                          label: Text(
-                            "Quantity: 5",
-                            style: TextStyle(
-                              color: isDark
-                                  ? AppColors.softAmber
-                                  : AppColors.chocolateDark,
-                            ),
-                          ),
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                              width: 1,
-                              color: isDark
-                                  ? AppColors.softAmber
-                                  : AppColors.chocolateDark,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
-                          ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(
+                          width: 1,
+                          color: isDark
+                              ? AppColors.softAmber
+                              : AppColors.chocolateDark,
                         ),
-                      ],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
