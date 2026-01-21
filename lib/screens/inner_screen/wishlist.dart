@@ -9,7 +9,7 @@ class WishlistScreen extends StatelessWidget {
   static const routName = "/WishlistScreen";
   const WishlistScreen({super.key});
 
-  final bool isEmpty = true; // promeni u false ako ima proizvoda
+  final bool isEmpty = false; // promeni u false ako ima proizvoda
 
   @override
   Widget build(BuildContext context) {
