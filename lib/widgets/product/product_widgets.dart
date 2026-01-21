@@ -45,7 +45,7 @@ class ProductWidgetState extends State<ProductWidget> {
                   Flexible(
                     flex: 5,
                     child: TitelesTextWidget(
-                      label: "Parfume " * 1,
+                      label: "Perfume" * 1,
                       fontSize: 18,
                       maxLines: 2,
                       color: Theme.of(context).textTheme.titleLarge?.color,
