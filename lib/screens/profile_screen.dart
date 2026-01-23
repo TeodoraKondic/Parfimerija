@@ -41,8 +41,8 @@ class ProfileScreen extends StatelessWidget {
             
             ProfileHeaderWidget(
               name: "Teodora Kondic",
-              email: "kondic.it53.2023@uns.ac.rs",
-              imagePath: "${AssetsManager.imagePath}/profile/mojaSlika.jpg",
+              email: "primer@gmail.com",
+              imagePath: "${AssetsManager.imagePath}/profile/mojaSlika.png",
               onEdit: () {
                 Navigator.pushNamed(context, EditProfileScreen.routName);
               },
