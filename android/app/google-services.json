@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "144252874688",
+    "project_id": "parfimerija-2c006",
+    "storage_bucket": "parfimerija-2c006.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:144252874688:android:53997b6cbf4770b49aa225",
+        "android_client_info": {
+          "package_name": "com.example.parfimerija_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUraQnjiJn6mOO6AWYN-3gBvv0lT4Owz4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
