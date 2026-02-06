@@ -1,5 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/theme_data.dart';
+import 'package:parfimerija_app/providers/cart_provider.dart';
+import 'package:parfimerija_app/providers/products_provider.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:parfimerija_app/screens/auth/login_screen.dart';
 import 'package:parfimerija_app/screens/auth/register_screen.dart';
@@ -21,7 +24,9 @@ enum UserType {
 
 UserType currentUser = UserType.guest;
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // <-- obavezno za async
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -33,11 +38,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => ProductsProvider()),
+        /*ChangeNotifierProvider(
           create: (_) {
-            return ThemeProvider();
+            //return ThemeProvider();
+            //return CartProvider();
+           
           },
-        ),
+        ),*/
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {

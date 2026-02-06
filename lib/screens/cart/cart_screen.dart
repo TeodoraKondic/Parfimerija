@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:parfimerija_app/providers/cart_provider.dart';
 import 'package:parfimerija_app/screens/cart/bottom_chechkout.dart';
 import 'package:parfimerija_app/screens/cart/card_widget.dart';
 import 'package:parfimerija_app/services/assets_manager.dart';
 import 'package:parfimerija_app/widgets/empty_bag.dart';
+import 'package:provider/provider.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -41,12 +43,25 @@ class CartScreen extends StatelessWidget {
             body: Column(
               children: [
                 Expanded(
-                  child: ListView.builder(
+                  /*child: ListView.builder(
                     itemCount: 10,
                     itemBuilder: (context, index) {
                       return const CardWidget();
                     },
-                  ),
+                  ),*/
+                   child: Builder(
+    builder: (context) {
+      final cart = Provider.of<CartProvider>(context); // uzimamo korpu
+
+      return ListView.builder(
+        itemCount: cart.items.length,
+        itemBuilder: (context, index) {
+          final product = cart.items[index];
+          return CardWidget(product: product); // prosledjujemo proizvod
+        },
+      );
+    },
+  ),
                 ),
                 
                 Container(

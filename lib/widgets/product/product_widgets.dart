@@ -4,6 +4,7 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
 import 'package:parfimerija_app/const/app_consts.dart';
+import 'package:parfimerija_app/models/product.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:parfimerija_app/widgets/product/heart_btn.dart';
 import 'package:parfimerija_app/widgets/subtitle_text.dart';
@@ -11,7 +12,7 @@ import 'package:parfimerija_app/widgets/title_text.dart';
 import 'package:provider/provider.dart';
 
 class ProductWidget extends StatefulWidget {
-  const ProductWidget({super.key});
+  const ProductWidget({super.key, required Product product});
 
   @override
   State<ProductWidget> createState() => ProductWidgetState();

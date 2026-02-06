@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
+import 'package:parfimerija_app/models/product.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:parfimerija_app/screens/product_details_screen.dart'; // Importuj onaj ekran od malopre
 import 'package:parfimerija_app/services/assets_manager.dart';
+import 'package:parfimerija_app/services/product_service.dart';
 import 'package:parfimerija_app/widgets/circle.dart';
 import 'package:parfimerija_app/widgets/map_widget.dart';
 import 'package:parfimerija_app/widgets/products/category_list_widget.dart';
@@ -10,16 +12,69 @@ import 'package:parfimerija_app/widgets/products/category_list_widget.dart';
 import 'package:parfimerija_app/widgets/subtitle_text.dart';
 import 'package:parfimerija_app/widgets/title_text.dart';
 import 'package:provider/provider.dart';
-
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+class _HomeScreenState extends State<HomeScreen> {
+  final ProductService _service = ProductService();
+  List<Product> popularPerfumes = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadProducts();
+  }
+
+  Future<void> loadProducts() async {
+    popularPerfumes = await _service.getProducts();
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
+    if (isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+/*class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+  final ProductService _service = ProductService();
+  List<Product> popularPerfumes = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadProducts();
+  }
+
+  Future<void> loadProducts() async {
+    popularPerfumes = await _service.getProducts();
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
+    if (isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }*/
+
+
+
     // Lista test podataka za početnu stranu
-    final List<Map<String, String>> popularPerfumes = [
+    /*final List<Map<String, String>> popularPerfumes = [
       {
         "title": "Chanel No. 5",
         "brand": "Chanel",
@@ -67,7 +122,7 @@ class HomeScreen extends StatelessWidget {
         "image": "https://pafos.rs/img/products/3423473020264.jpg",
         "desc": "Stunning and overwhelming like the joy of living.",
       },
-    ];
+    ];*/
     final List<Map<String, String>> categories = [
       {
         "image": "${AssetsManager.imagePath}/categories/floral.png",
@@ -159,16 +214,20 @@ class HomeScreen extends StatelessWidget {
                   final perfume = popularPerfumes[index];
                   return GestureDetector(
                     onTap: () {
-                      
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => ProductDetailsScreen(
-                            title: perfume['title']!,
+                            /*title: perfume['title']!,
                             brand: perfume['brand']!,
                             price: perfume['price']!,
                             image: perfume['image']!,
-                            description: perfume['desc']!,
+                            description: perfume['desc']!,*/
+                            title: perfume.name,
+                            brand: perfume.brand,
+                            price: perfume.price.toString(),
+                            image: perfume.imageUrl,
+                            description: perfume.description,
                           ),
                         ),
                       );
@@ -182,7 +241,8 @@ class HomeScreen extends StatelessWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: Image.network(
-                              perfume['image']!,
+                              //perfume['image']!,
+                              perfume.imageUrl,
                               height: 180,
                               width: 180,
                               fit: BoxFit.cover,
@@ -190,18 +250,20 @@ class HomeScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           SubtitleTextWidget(
-                            label: perfume['title']!,
+                            //label: perfume['title']!,
+                            label: perfume.name,
                             color: Theme.of(
                               context,
                             ).textTheme.titleLarge?.color,
                             fontWeight: FontWeight.bold,
                           ),
                           Text(
-                            "${perfume['price']} RSD",
+                            //"${perfume['price']} RSD",
+                            "${perfume.price} RSD",
                             style: TextStyle(
                               color: Theme.of(
                                 context,
-                              ).textTheme.titleLarge?.color, 
+                              ).textTheme.titleLarge?.color,
                             ),
                           ),
                         ],
@@ -239,7 +301,6 @@ class HomeScreen extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: TitelesTextWidget(
@@ -250,12 +311,9 @@ class HomeScreen extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            
             const MapWidget(),
 
             const SizedBox(height: 50),
-            
-          
           ],
         ),
       ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
+import 'package:parfimerija_app/models/product.dart';
+//import 'package:parfimerija_app/providers/products_provider.dart';
 import 'package:parfimerija_app/screens/product_details_screen.dart';
 import 'package:parfimerija_app/widgets/product/heart_btn.dart';
 import 'package:parfimerija_app/widgets/subtitle_text.dart';
@@ -8,7 +10,7 @@ import 'package:parfimerija_app/widgets/title_text.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:provider/provider.dart';
 
-final List<Map<String, String>> latestArrivals = [
+/*final List<Map<String, String>> latestArrivals = [
   {
     "title": "Dior J'adore",
     "brand": "Dior",
@@ -47,15 +49,18 @@ final List<Map<String, String>> latestArrivals = [
         "https://www.perfumestudiomnl.com/cdn/shop/files/image_28839bf4-767f-4aa8-9f36-0523330842d3.png?v=1686755674&width=1946",
         "desc": "A sweet and seductive fragrance with hints of caramel.",
   },
-];
+];*/
 
 class LatestArrivalProductsWidget extends StatelessWidget {
-  final int index;
-  const LatestArrivalProductsWidget({super.key, required this.index});
-
+  /*final int index;*/
+  final Product product;
+  const LatestArrivalProductsWidget({super.key, required this.product});
+  
+  
   @override
   Widget build(BuildContext context) {
-    final product = latestArrivals[index];
+    
+    //final product = latestArrivals[index];
     Size size = MediaQuery.of(context).size;
 
     return GestureDetector(
@@ -65,11 +70,11 @@ class LatestArrivalProductsWidget extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => ProductDetailsScreen(
-              title: product['title']!,
-              brand: product['brand']!,
-              price: product['price']!,
-              image: product['image']!,
-              description: product['desc'] ?? "No description available",
+              title: product.name,
+              brand: product.brand,
+              price: product.price.toString(),
+              image: product.imageUrl,
+              description: product.description //?? "No description available",
             ),
           ),
         );
@@ -91,7 +96,7 @@ class LatestArrivalProductsWidget extends StatelessWidget {
                 topRight: Radius.circular(12),
               ),
               child: FancyShimmerImage(
-                imageUrl: product["image"]!,
+                imageUrl: product.imageUrl,
                 width: double.infinity,
                 height: size.width * 0.6, //ovde povecavm sliku
                 boxFit: BoxFit.cover,
@@ -104,7 +109,7 @@ class LatestArrivalProductsWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TitelesTextWidget(
-                    label: product["title"]!,
+                    label: product.name,
                     fontSize: 15,
                     maxLines: 1,
                     color: Theme.of(context).textTheme.titleLarge?.color,
@@ -115,7 +120,7 @@ class LatestArrivalProductsWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SubtitleTextWidget(
-                        label: "${product["price"]} RSD",
+                        label: "${product.price} RSD",
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).textTheme.titleLarge?.color,
                       ),

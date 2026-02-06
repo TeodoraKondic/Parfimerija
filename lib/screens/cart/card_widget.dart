@@ -2,7 +2,8 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
-import 'package:parfimerija_app/const/app_consts.dart';
+//import 'package:parfimerija_app/const/app_consts.dart';
+import 'package:parfimerija_app/models/product.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:parfimerija_app/screens/cart/quantity_btm_sheet.dart';
 import 'package:parfimerija_app/widgets/subtitle_text.dart';
@@ -10,7 +11,8 @@ import 'package:parfimerija_app/widgets/title_text.dart';
 import 'package:provider/provider.dart';
 
 class CardWidget extends StatefulWidget {
-  const CardWidget({super.key});
+  const CardWidget({super.key, required this.product});
+  final Product product; 
 
   @override
   State<CardWidget> createState() => _CardWidgetState();
@@ -32,11 +34,13 @@ class _CardWidgetState extends State<CardWidget> {
           ClipRRect(
             borderRadius: BorderRadius.circular(12.0),
             child: FancyShimmerImage(
-              imageUrl: AppConstants.imageUrl,
+              //imageUrl: AppConstants.imageUrl,
+              imageUrl: widget.product.imageUrl,
               height: size.height * 0.15,
               width: size.height * 0.15,
               boxFit: BoxFit.contain,
             ),
+            
           ),
           const SizedBox(width: 10),
 
@@ -48,10 +52,11 @@ class _CardWidgetState extends State<CardWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: TitelesTextWidget(
+                      /*child: TitelesTextWidget(
                         label: "Perfume Name",
                         maxLines: 2,
-                      ),
+                      ),*/
+                      child: TitelesTextWidget(label: widget.product.name),
                     ),
                     IconButton(
                       onPressed: () {
@@ -72,12 +77,13 @@ class _CardWidgetState extends State<CardWidget> {
 
                 Row(
                   children: [
-                    SubtitleTextWidget(
+                    /*SubtitleTextWidget(
                       label: "1200 RSD",
                       color: isDark
                           ? AppColors.softAmber
                           : AppColors.chocolateDark,
-                    ),
+                    ),*/
+                    SubtitleTextWidget(label: "${widget.product.price} RSD"),
                     const Spacer(),
                     OutlinedButton.icon(
                       onPressed: () async {
