@@ -195,10 +195,10 @@ class SearchScreenState extends State<SearchScreen> {
       final allProducts = await ProductService().getProducts();
 
       setState(() {
-        // uzmi poslednjih 10 za Latest Arrivals
-        latestArrivals = allProducts.reversed.take(10).toList();
+        // uzmi poslednjih 6 za Latest Arrivals
+        latestArrivals = allProducts.reversed.take(6).toList();
         // uzmi prvih 10 za Most Popular (ili po logici baze)
-        mostPopular = allProducts.take(10).toList();
+        mostPopular = allProducts.toList();
         isLoading = false;
       });
     } catch (e) {

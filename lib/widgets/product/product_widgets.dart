@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
-import 'package:parfimerija_app/const/app_consts.dart';
+//import 'package:parfimerija_app/const/app_consts.dart';
 import 'package:parfimerija_app/models/product.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:parfimerija_app/widgets/product/heart_btn.dart';
@@ -12,7 +12,8 @@ import 'package:parfimerija_app/widgets/title_text.dart';
 import 'package:provider/provider.dart';
 
 class ProductWidget extends StatefulWidget {
-  const ProductWidget({super.key, required Product product});
+  final Product product;
+  const ProductWidget({super.key, required this.product});
 
   @override
   State<ProductWidget> createState() => ProductWidgetState();
@@ -21,6 +22,7 @@ class ProductWidget extends StatefulWidget {
 class ProductWidgetState extends State<ProductWidget> {
   @override
   Widget build(BuildContext context) {
+    final product = widget.product;
     Size size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.all(0.0),
@@ -33,7 +35,8 @@ class ProductWidgetState extends State<ProductWidget> {
             ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
               child: FancyShimmerImage(
-                imageUrl: AppConstants.imageUrl,
+                //imageUrl: AppConstants.imageUrl,
+                imageUrl: product.imageUrl,
                 height: size.height * 0.22,
                 width: double.infinity,
               ),
@@ -46,7 +49,8 @@ class ProductWidgetState extends State<ProductWidget> {
                   Flexible(
                     flex: 5,
                     child: TitelesTextWidget(
-                      label: "Perfume" * 1,
+                      //label: "Perfume" * 1,
+                      label: product.name,
                       fontSize: 18,
                       maxLines: 2,
                       color: Theme.of(context).textTheme.titleLarge?.color,
@@ -67,7 +71,8 @@ class ProductWidgetState extends State<ProductWidget> {
                   Flexible(
                     flex: 1,
                     child: SubtitleTextWidget(
-                      label: "1200 RSD",
+                      //label: "1200 RSD",
+                       label: "${product.price.toStringAsFixed(0)} RSD",
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).textTheme.titleLarge?.color,
                     ),

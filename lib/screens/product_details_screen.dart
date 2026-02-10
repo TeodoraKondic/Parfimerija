@@ -65,6 +65,7 @@ class ProductDetailsScreen extends StatelessWidget {
                       fontSize: 18,
                       color: dynamicColor?.withValues(alpha: 0.7),
                     ),
+                    
                   ),
                   const SizedBox(height: 8),
 
@@ -75,6 +76,7 @@ class ProductDetailsScreen extends StatelessWidget {
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: dynamicColor,
+                      
                     ),
                   ),
                   const SizedBox(height: 12),

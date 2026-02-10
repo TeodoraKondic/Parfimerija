@@ -206,10 +206,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             // lista najpopularnijih
             SizedBox(
-              height: 280,
+              height: 300,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: popularPerfumes.length,
+                //itemCount: popularPerfumes.length,
+                itemCount: popularPerfumes.take(5).length,
                 itemBuilder: (context, index) {
                   final perfume = popularPerfumes[index];
                   return GestureDetector(
