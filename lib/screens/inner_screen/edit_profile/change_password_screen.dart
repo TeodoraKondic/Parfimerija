@@ -1,8 +1,11 @@
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unused_field
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
+import 'package:parfimerija_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -18,6 +21,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   late TextEditingController _oldPassController;
   late TextEditingController _newPassController;
   late TextEditingController _confirmPassController;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -35,15 +39,57 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     super.dispose();
   }
 
-  void _changePassword() {
-    if (_formKey.currentState!.validate()) {
-      // Ovde ide backend logika za promenu lozinke
-      Navigator.pop(context);
+
+Future<void> _changePassword() async {
+  if (!_formKey.currentState!.validate()) return;
+
+  setState(() => _isLoading = true);
+
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
+  final user = userProvider.getUser;
+  final currentUid = FirebaseAuth.instance.currentUser?.uid ?? user?.uid;
+
+  if (currentUid == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Error: User not found!")),
+    );
+    setState(() => _isLoading = false);
+    return;
+  }
+
+  try {
+   
+    await FirebaseFirestore.instance
+        .collection("korisnici")
+        .doc(currentUid)
+        .update({'password': _newPassController.text.trim()});
+
+  
+    await userProvider.fetchUserInfo(currentUid, byUid: true);
+
+    if (mounted) {
+      setState(() {
+        _oldPassController.clear();
+        _newPassController.clear();
+        _confirmPassController.clear();
+      });
+    }
+
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Password updated successfully!")),
+    );
+  } catch (e) {
+    if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Password changed successfully!")),
+        SnackBar(content: Text("Error: $e")),
       );
     }
+  } finally {
+    if (mounted) setState(() => _isLoading = false);
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
