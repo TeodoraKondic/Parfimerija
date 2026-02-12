@@ -109,14 +109,19 @@ class _CardWidgetState extends State<CardWidget> {
                             ? AppColors.softAmber
                             : AppColors.chocolateDark,
                       ),
-                      label: Text(
+                      /*label: Text(
                         "Quantity: 5",
                         style: TextStyle(
                           color: isDark
                               ? AppColors.softAmber
                               : AppColors.chocolateDark,
                         ),
-                      ),
+                      ),*/
+                      label: Text("Quantity: ${widget.product.quantity}",style: TextStyle(
+                          color: isDark
+                              ? AppColors.softAmber
+                              : AppColors.chocolateDark,
+                        ),),
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(
                           width: 1,

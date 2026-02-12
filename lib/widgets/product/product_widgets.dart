@@ -1,11 +1,13 @@
-import 'dart:developer';
+//import 'dart:developer';
 
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
 //import 'package:parfimerija_app/const/app_consts.dart';
 import 'package:parfimerija_app/models/product.dart';
+import 'package:parfimerija_app/providers/cart_provider.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
+import 'package:parfimerija_app/screens/product_details_screen.dart';
 import 'package:parfimerija_app/widgets/product/heart_btn.dart';
 import 'package:parfimerija_app/widgets/subtitle_text.dart';
 import 'package:parfimerija_app/widgets/title_text.dart';
@@ -28,7 +30,19 @@ class ProductWidgetState extends State<ProductWidget> {
       padding: const EdgeInsets.all(0.0),
       child: GestureDetector(
         onTap: () {
-          log("ToDo add the navigate to the product details screen");
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProductDetailsScreen(
+                title: product.name,
+                brand: product.brand,
+                price: product.price.toString(),
+                image: product.imageUrl,
+                description: product.description,
+              ),
+            ),
+          );
+          //log("ToDo add the navigate to the product details screen");
         },
         child: Column(
           children: [
@@ -56,9 +70,7 @@ class ProductWidgetState extends State<ProductWidget> {
                       color: Theme.of(context).textTheme.titleLarge?.color,
                     ),
                   ),
-                  Flexible(flex: 2, child: const HeartButtonWidget()
-                    
-                  ),
+                  Flexible(flex: 2, child: const HeartButtonWidget()),
                 ],
               ),
             ),
@@ -72,7 +84,7 @@ class ProductWidgetState extends State<ProductWidget> {
                     flex: 1,
                     child: SubtitleTextWidget(
                       //label: "1200 RSD",
-                       label: "${product.price.toStringAsFixed(0)} RSD",
+                      label: "${product.price.toStringAsFixed(0)} RSD",
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).textTheme.titleLarge?.color,
                     ),
@@ -80,20 +92,35 @@ class ProductWidgetState extends State<ProductWidget> {
                   Flexible(
                     child: Material(
                       borderRadius: BorderRadius.circular(12.0),
-                     
+
                       color: Provider.of<ThemeProvider>(context).getIsDarkTheme
-                          ? AppColors
-                                .lightVanilla 
+                          ? AppColors.lightVanilla
                           : AppColors.chocolateDark,
                       child: InkWell(
                         borderRadius: BorderRadius.circular(12.0),
-                        onTap: () {},
+                        onTap: () {
+                          // 1. Uzimamo provider
+                          final cartProvider = Provider.of<CartProvider>(
+                            context,
+                            listen: false,
+                          );
+
+                          // 2. Dodajemo proizvod u korpu
+                          cartProvider.addProduct(product);
+
+                          // 3. Opciono: Pokazujemo poruku da je dodato
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("${product.name} added to cart!"),
+                              duration: const Duration(seconds: 1),
+                            ),
+                          );
+                        },
                         splashColor:
                             Provider.of<ThemeProvider>(context).getIsDarkTheme
-                            ? AppColors
-                                  .chocolateDark 
+                            ? AppColors.chocolateDark
                             : AppColors.lightVanilla,
-                        
+
                         child: Padding(
                           padding: const EdgeInsets.all(6.0),
                           child: Icon(
@@ -102,8 +129,7 @@ class ProductWidgetState extends State<ProductWidget> {
                                 Provider.of<ThemeProvider>(
                                   context,
                                 ).getIsDarkTheme
-                                ? AppColors
-                                      .chocolateDark 
+                                ? AppColors.chocolateDark
                                 : AppColors.lightVanilla,
                           ),
                         ),

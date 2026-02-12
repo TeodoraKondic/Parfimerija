@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
+import 'package:parfimerija_app/providers/cart_provider.dart';
 import 'package:parfimerija_app/widgets/subtitle_text.dart';
 import 'package:parfimerija_app/widgets/title_text.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,7 @@ class CartBottomSheetWeidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Provider.of<ThemeProvider>(context).getIsDarkTheme;
+    final cartProvider = Provider.of<CartProvider>(context);
 
     return Container(
       decoration: BoxDecoration(
@@ -28,13 +30,15 @@ class CartBottomSheetWeidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const FittedBox(
+                    FittedBox(
                       child: TitelesTextWidget(
-                        label: "Total (5 products/10 items)",
+                        //label: "Total (5 products/10 items)",
+                        label: "Total (${cartProvider.itemCount} items)",
                       ),
                     ),
                     SubtitleTextWidget(
-                      label: "2200 RSD",
+                      //label: "2200 RSD",
+                      label: "${cartProvider.totalPrice.toStringAsFixed(2)} RSD",
                       color: isDark
                           ? AppColors.softAmber
                           : AppColors.chocolateDark,

@@ -6,6 +6,7 @@ import 'package:parfimerija_app/providers/products_provider.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:parfimerija_app/screens/auth/login_screen.dart';
 import 'package:parfimerija_app/screens/auth/register_screen.dart';
+import 'package:parfimerija_app/screens/cart/cart_screen.dart';
 import 'package:parfimerija_app/screens/cart/checkout_screen.dart';
 import 'package:parfimerija_app/screens/inner_screen/address_screen.dart';
 import 'package:parfimerija_app/screens/inner_screen/edit_profile/change_password_screen.dart';
@@ -71,7 +72,7 @@ class MyApp extends StatelessWidget {
               '/root': (context) => const RootScreen(),
               '/checkout': (context) => const CheckoutScreen(),
               '/search': (context) => const SearchScreen(),
-
+              '/cart': (context) => const CartScreen(),
 
               WishlistScreen.routName: (ctx) => const WishlistScreen(),
               ViewedRecentlyScreen.routName: (ctx) =>const ViewedRecentlyScreen(),

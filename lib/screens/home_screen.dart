@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
 import 'package:parfimerija_app/models/product.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
-import 'package:parfimerija_app/screens/product_details_screen.dart'; // Importuj onaj ekran od malopre
+import 'package:parfimerija_app/screens/product_details_screen.dart';
 import 'package:parfimerija_app/services/assets_manager.dart';
 import 'package:parfimerija_app/services/product_service.dart';
 import 'package:parfimerija_app/widgets/circle.dart';
@@ -12,12 +12,14 @@ import 'package:parfimerija_app/widgets/products/category_list_widget.dart';
 import 'package:parfimerija_app/widgets/subtitle_text.dart';
 import 'package:parfimerija_app/widgets/title_text.dart';
 import 'package:provider/provider.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+
 class _HomeScreenState extends State<HomeScreen> {
   final ProductService _service = ProductService();
   List<Product> popularPerfumes = [];
@@ -43,86 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
     if (isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-
-/*class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-  final ProductService _service = ProductService();
-  List<Product> popularPerfumes = [];
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    loadProducts();
-  }
-
-  Future<void> loadProducts() async {
-    popularPerfumes = await _service.getProducts();
-    setState(() {
-      isLoading = false;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-
-    if (isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }*/
-
-
-
-    // Lista test podataka za početnu stranu
-    /*final List<Map<String, String>> popularPerfumes = [
-      {
-        "title": "Chanel No. 5",
-        "brand": "Chanel",
-        "price": "15.000",
-        "image":
-            "https://www.domusweb.it/content/dam/domusweb/en/speciali/assoluti-del-design/gallery/2024/boccette-di-profumo-diventate-unicona-da-dal-a-gehry/1-domus-profumi-chanel111.jpg.foto.rbig.jpg",
-        "desc": "A timeless classic with floral notes.",
-      },
-      {
-        "title": "Sauvage",
-        "brand": "Dior",
-        "price": "12.500",
-        "image": "https://www.scentgod.com.au/img/perfumes/sauvage-edp.jpg",
-        "desc": "Fresh scent.",
-      },
-
-      {
-        "title": "Black Opium",
-        "brand": "Yves Saint Laurent",
-        "price": "11.000",
-        "image":
-            "https://jasmin.b-cdn.net/media/catalog/product/2/0/200302000139.jpg",
-        "desc": "A glam rock fragrance full of mystery and energy.",
-      },
-      {
-        "title": "Baccarat Rouge 540",
-        "brand": "Maison Francis Kurkdjian",
-        "price": "32.000",
-        "image":
-            "https://metropoliten.rs/upload/catalog/variation/8206/thumb/26955_1_694be90a993c1_980x980r.jpg",
-        "desc": "Luminous and sophisticated woody floral scent.",
-      },
-      {
-        "title": "Eros",
-        "brand": "Versace",
-        "price": "8.500",
-        "image":
-            "https://jasmin.b-cdn.net/media/catalog/product/cache/4456161891bc26600241f10587ca424f/v/e/versace.jpg",
-        "desc": "Love, passion, beauty, and desire.",
-      },
-      {
-        "title": "Light Blue",
-        "brand": "Dolce & Gabbana",
-        "price": "9.000",
-        "image": "https://pafos.rs/img/products/3423473020264.jpg",
-        "desc": "Stunning and overwhelming like the joy of living.",
-      },
-    ];*/
     final List<Map<String, String>> categories = [
       {
         "image": "${AssetsManager.imagePath}/categories/floral.png",
@@ -219,6 +141,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ProductDetailsScreen(
+                            title: perfume.name,
+                            brand: perfume.brand,
+                            price: perfume.price
+                                .toString(), // Mora u String jer detalji traže String
+                            image: perfume.imageUrl,
+                            description: perfume.description,
+                          ),
+                        ),
+                      );
+                      /*Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductDetailsScreen(
                             /*title: perfume['title']!,
                             brand: perfume['brand']!,
                             price: perfume['price']!,
@@ -231,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             description: perfume.description,
                           ),
                         ),
-                      );
+                      );*/
                     },
                     child: Container(
                       width: 180,

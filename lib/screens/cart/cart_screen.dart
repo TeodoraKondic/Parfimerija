@@ -12,12 +12,15 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context);
+    bool isEmpty = cartProvider.items.isEmpty;
     return isEmpty
         ? Scaffold(
             body: EmptyBagWidget(
               imagePath: "${AssetsManager.imagePath}/bag/checkout.png",
               title: "Your Cart is Empty",
-              subtitle: "Looks like you haven't added \n anything to your cart yet.",
+              subtitle:
+                  "Looks like you haven't added \n anything to your cart yet.",
               buttonText: "Shop Now",
               onPressed: () {
                 Navigator.pushReplacementNamed(context, "/search");
@@ -32,10 +35,12 @@ class CartScreen extends StatelessWidget {
                   "${AssetsManager.imagePath}/bag/checkout.png",
                 ),
               ),
-              title: const Text("Your cart"),
+              title:  Text("Your cart (${cartProvider.itemCount})"),
               actions: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    cartProvider.clearCart();
+                  },
                   icon: const Icon(Icons.delete_forever_rounded),
                 ),
               ],
@@ -43,43 +48,31 @@ class CartScreen extends StatelessWidget {
             body: Column(
               children: [
                 Expanded(
-                  /*child: ListView.builder(
-                    itemCount: 10,
+                  child: ListView.builder(
+                    itemCount: cartProvider.items.length,
                     itemBuilder: (context, index) {
-                      return const CardWidget();
+                      final product = cartProvider.items[index];
+                      return CardWidget(product: product);
                     },
-                  ),*/
-                   child: Builder(
-    builder: (context) {
-      final cart = Provider.of<CartProvider>(context); // uzimamo korpu
-
-      return ListView.builder(
-        itemCount: cart.items.length,
-        itemBuilder: (context, index) {
-          final product = cart.items[index];
-          return CardWidget(product: product); // prosledjujemo proizvod
-        },
-      );
-    },
-  ),
+                  ),
                 ),
-                
+
                 Container(
                   decoration: BoxDecoration(
-                    
-                    color: Theme.of(context).cardColor.withValues(alpha:0.9),
+                    color: Theme.of(context).cardColor.withValues(alpha: 0.9),
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black..withValues(alpha:0.2),
+                        color: Colors.black.withValues(alpha: 0.2),
                         blurRadius: 10,
                         offset: const Offset(0, -3),
                       ),
                     ],
                   ),
+
                   child: const CartBottomSheetWeidget(),
                 ),
               ],

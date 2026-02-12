@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
+import 'package:parfimerija_app/models/product.dart';
+import 'package:parfimerija_app/providers/cart_provider.dart';
 import 'package:parfimerija_app/screens/admin/edit_perfume.dart';
+import 'package:provider/provider.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   final String title;
@@ -20,25 +23,25 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dynamicColor =
-        Theme.of(context).textTheme.titleLarge?.color;
+    Provider.of<CartProvider>(context);
+    final dynamicColor = Theme.of(context).textTheme.titleLarge?.color;
 
     // HARDKODOVANE RECENZIJE (simulacija)
     final reviews = [
       {
         "user": "Ana Petrović",
         "rating": "10",
-        "text": "Amazing scent, lasts long!"
+        "text": "Amazing scent, lasts long!",
       },
       {
         "user": "Marko Jovanović",
         "rating": "8",
-        "text": "Fresh and powerful, perfect for everyday use."
+        "text": "Fresh and powerful, perfect for everyday use.",
       },
       {
         "user": "Jovana Lukić",
         "rating": "9",
-        "text": "Very elegant and sweet perfume."
+        "text": "Very elegant and sweet perfume.",
       },
     ];
 
@@ -65,7 +68,6 @@ class ProductDetailsScreen extends StatelessWidget {
                       fontSize: 18,
                       color: dynamicColor?.withValues(alpha: 0.7),
                     ),
-                    
                   ),
                   const SizedBox(height: 8),
 
@@ -76,7 +78,6 @@ class ProductDetailsScreen extends StatelessWidget {
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: dynamicColor,
-                      
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -126,11 +127,41 @@ class ProductDetailsScreen extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Added to cart!"),
-                          ),
+                        final cartProvider = Provider.of<CartProvider>(
+                          context,
+                          listen: false,
                         );
+
+                        final productToAdd = Product(
+                          id: DateTime.now()
+                              .toString(), 
+                          name: title,
+                          price: double.parse(price),
+                          imageUrl: image,
+                          brand: brand,
+                          description: description,
+                          
+                        );
+
+                        cartProvider.addProduct(productToAdd);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("${title} added to cart!"),
+                              duration: const Duration(seconds: 1),
+                              /*action: SnackBarAction(
+                              label: "See the cart",
+                              textColor: Colors.white,
+                              onPressed: () {
+                                // Ovde možeš dodati navigaciju ka CartScreen ako želiš
+                                Navigator.pushNamed(
+                                  context,
+                                  '/cart',
+                                ); // ili ruta ka korpi
+                              },
+                            ),*/
+                            ),
+                          );
                       },
                       icon: const Icon(Icons.shopping_bag),
                       label: const Text("Add to cart"),
@@ -200,15 +231,13 @@ class ProductDetailsScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black
-                                        .withValues(alpha: 0.05),
+                                    color: Colors.black.withValues(alpha: 0.05),
                                     blurRadius: 6,
                                   ),
                                 ],
                               ),
                               child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     mainAxisAlignment:
@@ -235,8 +264,9 @@ class ProductDetailsScreen extends StatelessWidget {
                                   Text(
                                     review["text"]!,
                                     style: TextStyle(
-                                      color: dynamicColor
-                                          ?.withValues(alpha: 0.8),
+                                      color: dynamicColor?.withValues(
+                                        alpha: 0.8,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -255,4 +285,3 @@ class ProductDetailsScreen extends StatelessWidget {
     );
   }
 }
-

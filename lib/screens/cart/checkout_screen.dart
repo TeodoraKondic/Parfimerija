@@ -56,7 +56,8 @@ class CheckoutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const TitelesTextWidget(label: "Total"),
-                TitelesTextWidget(label: "6000 RSD"),
+                //TitelesTextWidget(label: "6000 RSD"),
+                TitelesTextWidget(label: "${cart.totalPrice.toStringAsFixed(2)} RSD"),
               ],
             ),
           ],
