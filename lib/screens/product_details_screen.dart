@@ -147,6 +147,7 @@ class ProductDetailsScreen extends StatelessWidget {
 
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
+                              // ignore: unnecessary_brace_in_string_interps
                               content: Text("${title} added to cart!"),
                               duration: const Duration(seconds: 1),
                             ),

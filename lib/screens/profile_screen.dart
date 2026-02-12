@@ -96,31 +96,7 @@ class ProfileScreen extends StatelessWidget {
                       Navigator.pushNamed(context, AddressScreen.routName);
                     },
                   ),
-                  if (userModel?.role == 'admin') ...[
-                    const SizedBox(height: 20),
-                    const TitelesTextWidget(label: "Admin Panel"),
-                    const SizedBox(height: 10),
-                    CustomListTile(
-                      text: "Manage Users",
-                      imagePath: "${AssetsManager.imagePath}/profile/users.png",
-                      function: () =>
-                          Navigator.pushNamed(context, '/admin_users'),
-                    ),
-                    CustomListTile(
-                      text: "Manage Perfumes",
-                      imagePath:
-                          "${AssetsManager.imagePath}/profile/repeat.png",
-                      function: () =>
-                          Navigator.pushNamed(context, '/admin_perfumes'),
-                    ),
-                    CustomListTile(
-                      text: "Manage Orders",
-                      imagePath: "${AssetsManager.imagePath}/address.png",
-                      function: () =>
-                          Navigator.pushNamed(context, '/admin_orders'),
-                    ),
-                  ],
-
+                
                   const SizedBox(height: 20),
 
                   const TitelesTextWidget(label: "Security"),
@@ -176,6 +152,7 @@ class ProfileScreen extends StatelessWidget {
                         userProvider.clearUser();
 
                         currentUser = UserType.guest;
+                        // ignore: use_build_context_synchronously
                         Navigator.pushReplacementNamed(context, '/login');
                       },
                       label: const Text("Logout"),

@@ -133,18 +133,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           
                           if (!mounted) return;
                           final userProvider = Provider.of<UserProvider>(
+                            // ignore: use_build_context_synchronously
                             context,
                             listen: false,
                           );
+                          //await userProvider.fetchUserInfo
                           await userProvider.fetchUserInfo(
                             _emailController.text.trim(),
                           );
 
                           
                           if (!mounted) return;
+                          // ignore: use_build_context_synchronously
                           Navigator.pushReplacementNamed(context, '/root');
                         } on FirebaseAuthException catch (e) {
                           if (!mounted)
+                            // ignore: curly_braces_in_flow_control_structures
                             return; 
 
                           String message = "An error occurred";
@@ -155,11 +159,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           }
 
                           ScaffoldMessenger.of(
+                            // ignore: use_build_context_synchronously
                             context,
                           ).showSnackBar(SnackBar(content: Text(message)));
                         } catch (e) {
                           if (!mounted) return;
                           ScaffoldMessenger.of(
+                            // ignore: use_build_context_synchronously
                             context,
                           ).showSnackBar(SnackBar(content: Text("Error: $e")));
                         }
@@ -240,8 +246,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
           validator: (value) {
             if (value == null || value.isEmpty) return "$label is required";
             if (label == "Email Address" && !value.contains("@"))
+              // ignore: curly_braces_in_flow_control_structures
               return "Invalid email";
             if (label == "Password" && value.length < 6)
+              // ignore: curly_braces_in_flow_control_structures
               return "Password too short";
             return null;
           },
