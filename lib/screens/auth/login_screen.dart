@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:parfimerija_app/main.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
+import 'package:parfimerija_app/providers/user_provider.dart';
 import 'package:parfimerija_app/screens/auth/register_screen.dart';
 import 'package:parfimerija_app/screens/root_screen.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
@@ -18,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -31,11 +33,9 @@ class _LoginScreenState extends State<LoginScreen> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isDark = themeProvider.getIsDarkTheme;
 
-    
     final scaffoldBg = isDark ? AppColors.chocolateDark : AppColors.softAmber;
     final titleColor = isDark ? AppColors.softAmber : AppColors.chocolateDark;
-    
-    
+
     final btnBg = isDark ? AppColors.lightVanilla : AppColors.chocolateDark;
     final btnFg = isDark ? AppColors.chocolateDark : AppColors.softAmber;
 
@@ -49,12 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                
-                Icon(
-                  IconlyBold.login,
-                  size: 80,
-                  color: titleColor,
-                ),
+                Icon(IconlyBold.login, size: 80, color: titleColor),
                 const SizedBox(height: 16),
                 Text(
                   'Welcome Back',
@@ -66,7 +61,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 40),
 
-                
                 _buildInputSection(
                   label: "Email Address",
                   controller: _emailController,
@@ -86,7 +80,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 30),
 
-             
                 SizedBox(
                   width: double.infinity,
                   height: 55,
@@ -99,25 +92,85 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       elevation: 0,
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        currentUser = UserType.user;
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (_) => const RootScreen()),
-                        );
+                        setState(() {
+                          _isLoading = true; 
+                        });
+
+                        try {
+                          final userProvider = Provider.of<UserProvider>(
+                            context,
+                            listen: false,
+                          );
+
+                          await userProvider.fetchUserInfo(
+                            _emailController.text.trim(),
+                          );
+
+                          final user = userProvider.getUser;
+
+                          if (user != null) {
+                            if (_passwordController.text == user.password) {
+                              Navigator.pushReplacement(
+                                // ignore: use_build_context_synchronously
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const RootScreen(),
+                                ),
+                              );
+                            } else {
+                              // ignore: use_build_context_synchronously
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Wrong password!"),
+                                ),
+                              );
+                            }
+                          } else {
+                            // ignore: use_build_context_synchronously
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  "The user with that email does not exist.",
+                                ),
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          // ignore: use_build_context_synchronously
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Error: ${e.toString()}")),
+                          );
+                        } finally {
+                          setState(() {
+                            _isLoading =
+                                false; 
+                          });
+                        }
                       }
                     },
-                    child: const Text(
-                      'Log in',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
+                    child: _isLoading
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Text(
+                            'Log in',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
                 ),
 
                 const SizedBox(height: 20),
 
-            
                 TextButton(
                   style: TextButton.styleFrom(foregroundColor: titleColor),
                   onPressed: () {
@@ -127,13 +180,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       MaterialPageRoute(builder: (_) => const RootScreen()),
                     );
                   },
-                  child: const Text("Continue as Guest", 
-                    style: TextStyle(decoration: TextDecoration.underline)),
+                  child: const Text(
+                    "Continue as Guest",
+                    style: TextStyle(decoration: TextDecoration.underline),
+                  ),
                 ),
 
                 const SizedBox(height: 10),
 
-                
                 TextButton(
                   style: TextButton.styleFrom(foregroundColor: titleColor),
                   onPressed: () {
@@ -160,9 +214,12 @@ class _LoginScreenState extends State<LoginScreen> {
     required IconData icon,
     bool isPassword = false,
   }) {
-    
-    final Color contentColor = isDark ? AppColors.softAmber : AppColors.chocolateDark;
-    final Color fieldColor = isDark ? const Color(0xFF3E2723) : Colors.white.withValues(alpha:0.5);
+    final Color contentColor = isDark
+        ? AppColors.softAmber
+        : AppColors.chocolateDark;
+    final Color fieldColor = isDark
+        ? const Color(0xFF3E2723)
+        : Colors.white.withValues(alpha: 0.5);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,12 +242,15 @@ class _LoginScreenState extends State<LoginScreen> {
             filled: true,
             fillColor: fieldColor,
             hintText: hintText,
-            hintStyle: TextStyle(color: contentColor.withValues(alpha:0.4)),
+            hintStyle: TextStyle(color: contentColor.withValues(alpha: 0.4)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
           ),
           validator: (value) =>
               value == null || value.isEmpty ? "$label is required" : null,

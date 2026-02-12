@@ -83,7 +83,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 _buildInputSection(
                   label: "Password",
                   controller: _passwordController,
-                  hintText: "Min. 6 characters",
+                  hintText: "Min. 5 characters",
                   isDark: isDark,
                   isPassword: true,
                   icon: IconlyLight.lock,

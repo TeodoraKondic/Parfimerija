@@ -149,17 +149,6 @@ class ProductDetailsScreen extends StatelessWidget {
                             SnackBar(
                               content: Text("${title} added to cart!"),
                               duration: const Duration(seconds: 1),
-                              /*action: SnackBarAction(
-                              label: "See the cart",
-                              textColor: Colors.white,
-                              onPressed: () {
-                                // Ovde možeš dodati navigaciju ka CartScreen ako želiš
-                                Navigator.pushNamed(
-                                  context,
-                                  '/cart',
-                                ); // ili ruta ka korpi
-                              },
-                            ),*/
                             ),
                           );
                       },

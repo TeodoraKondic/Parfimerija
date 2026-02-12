@@ -3,6 +3,7 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
 import 'package:parfimerija_app/main.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
+import 'package:parfimerija_app/providers/user_provider.dart';
 import 'package:parfimerija_app/screens/inner_screen/address_screen.dart';
 import 'package:parfimerija_app/screens/inner_screen/edit_profile/change_password_screen.dart';
 import 'package:parfimerija_app/screens/inner_screen/edit_profile/edit_profile_screen.dart';
@@ -21,6 +22,8 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
+    final userModel = userProvider.getUser;
 
     return Scaffold(
       appBar: AppBar(
@@ -38,13 +41,17 @@ class ProfileScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            
             ProfileHeaderWidget(
-              name: "Teodora Kondic",
-              email: "primer@gmail.com",
-              imagePath: "${AssetsManager.imagePath}/profile/mojaSlika.png",
+              name: userModel?.name ?? "Guest User",
+              email: userModel?.email ?? "No email provided",
+
+              imagePath: (userModel != null && userModel.userImage.isNotEmpty)
+      ? userModel.userImage
+      : "${AssetsManager.imagePath}/profile/mojaSlika.png",
               onEdit: () {
-                Navigator.pushNamed(context, EditProfileScreen.routName);
+                if (userModel != null) {
+                  Navigator.pushNamed(context, EditProfileScreen.routName);
+                } else {}
               },
             ),
 
@@ -55,7 +62,6 @@ class ProfileScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  
                   const TitelesTextWidget(label: "General"),
                   const SizedBox(height: 10),
                   CustomListTile(
@@ -98,7 +104,10 @@ class ProfileScreen extends StatelessWidget {
                     imagePath: "${AssetsManager.imagePath}/profile/edit.png",
                     text: "Change Password",
                     function: () {
-                      Navigator.pushNamed(context, ChangePasswordScreen.routName);
+                      Navigator.pushNamed(
+                        context,
+                        ChangePasswordScreen.routName,
+                      );
                     },
                   ),
 
@@ -119,7 +128,6 @@ class ProfileScreen extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                
                   Center(
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
@@ -157,7 +165,6 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-
 class CustomListTile extends StatelessWidget {
   const CustomListTile({
     super.key,
@@ -179,4 +186,3 @@ class CustomListTile extends StatelessWidget {
     );
   }
 }
-

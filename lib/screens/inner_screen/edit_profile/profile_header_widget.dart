@@ -36,7 +36,9 @@ class ProfileHeaderWidget extends StatelessWidget {
                   ),
                   color: Theme.of(context).cardColor,
                   image: DecorationImage(
-                    image: AssetImage(imagePath),
+                    image: imagePath.startsWith('http') 
+                        ? NetworkImage(imagePath) as ImageProvider
+                        : AssetImage(imagePath) as ImageProvider,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -60,14 +62,20 @@ class ProfileHeaderWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(width: 12),
-          Column(
+         Expanded(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TitelesTextWidget(label: name),
+              TitelesTextWidget(
+                label: name,
+              ),
               const SizedBox(height: 4),
-              SubtitleTextWidget(label: email),
+              SubtitleTextWidget(
+                label: email,
+              ),
             ],
           ),
+        ),
         ],
       ),
     );
