@@ -5,47 +5,52 @@ import 'package:parfimerija_app/widgets/subtitle_text.dart';
 import 'package:parfimerija_app/widgets/title_text.dart';
 
 
-class OrdersWidget extends StatefulWidget {
-  const OrdersWidget({super.key});
-  @override
-  State<OrdersWidget> createState() => _OrdersWidgetState();
-}
+class OrdersWidget extends StatelessWidget {
+  
+  final Map<String, dynamic> orderData;
 
-class _OrdersWidgetState extends State<OrdersWidget> {
-  bool isLoading = false;
+  const OrdersWidget({super.key, required this.orderData});
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: Row(
         children: [
+         
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: FancyShimmerImage(
               height: size.width * 0.25,
               width: size.width * 0.25,
-              imageUrl: AppConstants.imageUrl,
+            
+              imageUrl: orderData['imageUrl'] ?? AppConstants.imageUrl,
             ),
           ),
+          
           Flexible(
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Flexible(
+                      Flexible(
                         child: TitelesTextWidget(
-                          label: 'Name of parfue',
+                          label: orderData['productName'] ?? 'Unknown perfume',
                           maxLines: 2,
                           fontSize: 15,
                         ),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          
+                        },
                         icon: const Icon(
                           Icons.clear,
                           color: Colors.red,
@@ -54,12 +59,14 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                       ),
                     ],
                   ),
+                  
+                  // CENA
                   Row(
                     children: [
                       const TitelesTextWidget(label: 'Price: ', fontSize: 15),
                       Flexible(
                         child: SubtitleTextWidget(
-                          label: "1.200 RSD",
+                          label: "${orderData['priceTotal']} RSD",
                           fontSize: 15,
                           color: Theme.of(context).textTheme.titleLarge?.color,
                         ),
@@ -67,8 +74,25 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                     ],
                   ),
                   const SizedBox(height: 5),
-                  const SubtitleTextWidget(label: "Quantity: 3", fontSize: 15),
+                  
+                  // KOLIČINA
+                  SubtitleTextWidget(
+                    label: "Quantity: ${orderData['quantity']}", 
+                    fontSize: 15
+                  ),
                   const SizedBox(height: 5),
+                  
+                
+                  Row(
+                    children: [
+                      const TitelesTextWidget(label: 'Status: ', fontSize: 14),
+                      SubtitleTextWidget(
+                        label: "${orderData['status']}",
+                        fontSize: 14,
+                        color: _getStatusColor(orderData['status']),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -76,5 +100,19 @@ class _OrdersWidgetState extends State<OrdersWidget> {
         ],
       ),
     );
+  }
+
+  // Mala pomoćna funkcija da boja statusa bude različita
+  Color _getStatusColor(String? status) {
+    switch (status?.toLowerCase()) {
+      case 'delivered':
+        return Colors.green;
+      case 'shipped':
+        return Colors.blue;
+      case 'cancelled':
+        return Colors.red;
+      default:
+        return Colors.orange;
+    }
   }
 }

@@ -1,3 +1,5 @@
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
@@ -13,23 +15,16 @@ class OrderManagementScreen extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final bool isDark = themeProvider.getIsDarkTheme;
 
-    
-    final orders = [
-      {"id": "001", "user": "Marko Marković", "total": "4500 RSD", "status": "Pending"},
-      {"id": "002", "user": "Jelena Janković", "total": "3200 RSD", "status": "Completed"},
-      {"id": "003", "user": "Nikola Petrović", "total": "2700 RSD", "status": "Cancelled"},
-    ];
-
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text("Orders Management"),
+        title: const Text("Orders Management (Admin)"),
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
       ),
       body: Column(
         children: [
-        
+          
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: SizedBox(
@@ -51,65 +46,94 @@ class OrderManagementScreen extends StatelessWidget {
                 },
                 icon: const Icon(Icons.add_shopping_cart),
                 label: const Text(
-                  "Add Order",
+                  "Add Order Manually",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
             ),
           ),
 
-        
+       
           Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: orders.length,
-              // ignore: unnecessary_underscores
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, index) {
-                final order = orders[index];
-
-                return Card(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('porudzbine')
                   
-                  color: isDark ? AppColors.softAmber : AppColors.chocolateDark,
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                    title: Text(
-                      "Order #${order["id"]}",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: isDark ? AppColors.chocolateDark : AppColors.softAmber,
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasError) {
+                  return Center(child: Text("Error: ${snapshot.error}"));
+                }
+
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(
+                    child: Text("There are currently no orders in the database."),
+                  );
+                }
+                final ordersDocs = snapshot.data!.docs;
+
+                return ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: ordersDocs.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    // Uzimamo podatke iz dokumenta
+                    final data = ordersDocs[index].data() as Map<String, dynamic>;
+                    
+                    // Izvlačenje polja (pazi da se imena poklapaju sa Firebase-om)
+                    final String id = data['orderId']?.toString() ?? 'N/A';
+                    final String productName = data['productName'] ?? 'No Name';
+                    final String total = "${data['priceTotal']} RSD";
+                    final String status = data['status'] ?? 'pending';
+                    final int quantity = data['quantity'] ?? 0;
+
+                    return Card(
+                      color: isDark ? AppColors.softAmber : AppColors.chocolateDark,
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    ),
-                    subtitle: Text(
-                      "${order["user"]} • ${order["total"]} • ${order["status"]}",
-                      style: TextStyle(
-                        color: isDark 
-                            ? AppColors.chocolateDark.withValues(alpha:0.7) 
-                            : AppColors.softAmber.withValues(alpha:0.7),
-                      ),
-                    ),
-                    trailing: Icon(
-                      Icons.chevron_right,
-                      color: isDark ? AppColors.chocolateDark : AppColors.softAmber,
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => EditOrderScreen(
-                            id: order["id"]!,
-                            user: order["user"]!,
-                            total: order["total"]!,
-                            status: order["status"]!,
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                        title: Text(
+                          "Order #$id",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: isDark ? AppColors.chocolateDark : AppColors.softAmber,
                           ),
                         ),
-                      );
-                    },
-                  ),
+                        subtitle: Text(
+                          "$productName (x$quantity) • $total • $status",
+                          style: TextStyle(
+                            color: isDark 
+                                ? AppColors.chocolateDark.withAlpha(180) 
+                                : AppColors.softAmber.withAlpha(180),
+                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.chevron_right,
+                          color: isDark ? AppColors.chocolateDark : AppColors.softAmber,
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => EditOrderScreen(
+                                id: id,
+                                user: data['uid'] ?? 'Unknown User', 
+                                total: total,
+                                status: status,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
                 );
               },
             ),

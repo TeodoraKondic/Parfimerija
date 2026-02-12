@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/theme_data.dart';
 import 'package:parfimerija_app/providers/cart_provider.dart';
+//import 'package:parfimerija_app/providers/order_provider.dart';
 import 'package:parfimerija_app/providers/products_provider.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:parfimerija_app/providers/user_provider.dart';
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => ProductsProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        //ChangeNotifierProvider(create: (_) => OrderProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
