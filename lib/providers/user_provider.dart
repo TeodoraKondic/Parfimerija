@@ -22,4 +22,8 @@ class UserProvider with ChangeNotifier {
       rethrow;
     }
   }
+  void clearUser() {
+    _userModel = null; 
+    notifyListeners(); 
+  }
 }

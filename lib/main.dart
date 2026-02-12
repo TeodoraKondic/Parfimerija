@@ -5,6 +5,9 @@ import 'package:parfimerija_app/providers/cart_provider.dart';
 import 'package:parfimerija_app/providers/products_provider.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:parfimerija_app/providers/user_provider.dart';
+import 'package:parfimerija_app/screens/admin/orders/order_screen_admin.dart';
+import 'package:parfimerija_app/screens/admin/perfume_management_screen.dart';
+import 'package:parfimerija_app/screens/admin/users/user_screen_admin.dart';
 import 'package:parfimerija_app/screens/auth/login_screen.dart';
 import 'package:parfimerija_app/screens/auth/register_screen.dart';
 import 'package:parfimerija_app/screens/cart/cart_screen.dart';
@@ -53,13 +56,10 @@ class MyApp extends StatelessWidget {
               isDarkTheme: themeProvider.getIsDarkTheme,
               context: context,
             ),
-            //home: const RootScreen(),
-            //home: const LoginScreen(),
             initialRoute: '/login',
             routes: {
               '/login': (context) => LoginScreen(
                 onLoginSuccess: () {
-                  // Šta se desi kad se korisnik uloguje
                   Navigator.pushReplacementNamed(context, '/root');
                 },
               ),
@@ -68,6 +68,9 @@ class MyApp extends StatelessWidget {
               '/checkout': (context) => const CheckoutScreen(),
               '/search': (context) => const SearchScreen(),
               '/cart': (context) => const CartScreen(),
+              '/admin_users': (context) => const UserManagementScreen(),
+'/admin_perfumes': (context) => const PerfumeManagementScreen(),
+'/admin_orders': (context) => const OrderManagementScreen(),
 
               WishlistScreen.routName: (ctx) => const WishlistScreen(),
               ViewedRecentlyScreen.routName: (ctx) =>const ViewedRecentlyScreen(),

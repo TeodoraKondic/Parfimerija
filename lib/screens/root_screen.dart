@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
 import 'package:parfimerija_app/providers/cart_provider.dart';
+import 'package:parfimerija_app/providers/user_provider.dart';
 import 'package:parfimerija_app/screens/admin/admin_screen.dart';
 import 'package:parfimerija_app/screens/cart/cart_screen.dart';
 import 'package:parfimerija_app/screens/home_screen.dart';
 import 'package:parfimerija_app/screens/profile_screen.dart';
 import 'package:parfimerija_app/screens/search_screen.dart';
+import 'package:parfimerija_app/widgets/LoginRequiredWidget';
 import 'package:provider/provider.dart';
 
 class RootScreen extends StatefulWidget {
@@ -37,8 +39,27 @@ class RootScreenState extends State<RootScreen> {
   @override
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
+final user = userProvider.getUser;
+
+List<Widget> screens = [
+  const HomeScreen(),  
+  const SearchScreen(), 
+  
+  user == null 
+    ? const LoginRequiredWidget(text: "Please login to view your profile.") 
+    : const ProfileScreen (),
+    
+  user == null 
+    ? const LoginRequiredWidget(text: "Please login to view your cart.") 
+    : const CartScreen(),
+
+user?.role == 'admin'
+        ? const AdminScreen()
+        : const LoginRequiredWidget(text: "Access denied. Only administrators can view this section."),
+    ];
     return Scaffold(
-      body: PageView(controller: controller, children: screens),
+      body: PageView(controller: controller,physics: const NeverScrollableScrollPhysics(), children: screens),
       bottomNavigationBar: NavigationBar(
         selectedIndex: currentScreen,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
@@ -46,8 +47,8 @@ class ProfileScreen extends StatelessWidget {
               email: userModel?.email ?? "No email provided",
 
               imagePath: (userModel != null && userModel.userImage.isNotEmpty)
-      ? userModel.userImage
-      : "${AssetsManager.imagePath}/profile/mojaSlika.png",
+                  ? userModel.userImage
+                  : "${AssetsManager.imagePath}/profile/mojaSlika.png",
               onEdit: () {
                 if (userModel != null) {
                   Navigator.pushNamed(context, EditProfileScreen.routName);
@@ -95,6 +96,30 @@ class ProfileScreen extends StatelessWidget {
                       Navigator.pushNamed(context, AddressScreen.routName);
                     },
                   ),
+                  if (userModel?.role == 'admin') ...[
+                    const SizedBox(height: 20),
+                    const TitelesTextWidget(label: "Admin Panel"),
+                    const SizedBox(height: 10),
+                    CustomListTile(
+                      text: "Manage Users",
+                      imagePath: "${AssetsManager.imagePath}/profile/users.png",
+                      function: () =>
+                          Navigator.pushNamed(context, '/admin_users'),
+                    ),
+                    CustomListTile(
+                      text: "Manage Perfumes",
+                      imagePath:
+                          "${AssetsManager.imagePath}/profile/repeat.png",
+                      function: () =>
+                          Navigator.pushNamed(context, '/admin_perfumes'),
+                    ),
+                    CustomListTile(
+                      text: "Manage Orders",
+                      imagePath: "${AssetsManager.imagePath}/address.png",
+                      function: () =>
+                          Navigator.pushNamed(context, '/admin_orders'),
+                    ),
+                  ],
 
                   const SizedBox(height: 20),
 
@@ -145,7 +170,11 @@ class ProfileScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
+                        await FirebaseAuth.instance.signOut();
+
+                        userProvider.clearUser();
+
                         currentUser = UserType.guest;
                         Navigator.pushReplacementNamed(context, '/login');
                       },
