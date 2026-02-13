@@ -9,6 +9,7 @@ class EditUserScreen extends StatefulWidget {
   final String name;
   final String email;
   final String phone;
+  final String address;
 
   const EditUserScreen({
     super.key,
@@ -16,6 +17,7 @@ class EditUserScreen extends StatefulWidget {
     required this.name,
     required this.email,
     required this.phone,
+    required this.address,
   });
 
   @override
@@ -26,6 +28,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
   late TextEditingController _nameController;
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
+  late TextEditingController _addressController;
 
   @override
   void initState() {
@@ -33,6 +36,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
     _nameController = TextEditingController(text: widget.name);
     _emailController = TextEditingController(text: widget.email);
     _phoneController = TextEditingController(text: widget.phone);
+    _addressController = TextEditingController(text: widget.address);
   }
 
   @override
@@ -40,6 +44,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
     _nameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
+    _addressController.dispose();
     super.dispose();
   }
 
@@ -53,6 +58,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
         'name': _nameController.text.trim(),
         'email': _emailController.text.trim(),
         'phoneNumber': _phoneController.text.trim(),
+        'address': _addressController.text.trim(),
       });
 
       // ignore: use_build_context_synchronously
@@ -70,7 +76,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
     }
   }
 
-  // 🔹 DELETE USER
+
   Future<void> _deleteUser() async {
     try {
       await FirebaseFirestore.instance
@@ -109,6 +115,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
             _field("Name", _nameController, isDark),
             _field("Email", _emailController, isDark),
             _field("Phone", _phoneController, isDark),
+            _field("Address", _addressController, isDark),
 
             const SizedBox(height: 24),
 
@@ -132,7 +139,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
 
             const SizedBox(height: 16),
 
-            // DELETE
+
             SizedBox(
               width: double.infinity,
               height: 50,
@@ -155,7 +162,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
     );
   }
 
-  // 🔹 INPUT FIELD
+
   Widget _field(
       String label, TextEditingController controller, bool isDark) {
     return Padding(

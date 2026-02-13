@@ -71,7 +71,6 @@ class _PerfumeManagementScreenState extends State<PerfumeManagementScreen> {
                   ).then((_) {
                     loadPerfumes();
                   });
-                  ;
                 },
                 icon: const Icon(Icons.add),
                 label: const Text(
