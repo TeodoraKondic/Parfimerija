@@ -6,7 +6,7 @@ class UserProvider extends ChangeNotifier {
   UserModel? _user;
 
   UserModel? get getUser => _user;
-
+  bool get isAdmin => _user != null && _user!.role == 'admin';
   
   Future<void> fetchUserInfo(String identifier, {bool byUid = false}) async {
     try {

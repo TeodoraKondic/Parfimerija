@@ -27,7 +27,7 @@ class _PerfumeManagementScreenState extends State<PerfumeManagementScreen> {
   }
 
   Future<void> loadPerfumes() async {
-    perfumes = await _service.getProducts(); 
+    perfumes = await _service.getProducts();
     setState(() {
       isLoading = false;
     });
@@ -64,11 +64,14 @@ class _PerfumeManagementScreenState extends State<PerfumeManagementScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                onPressed: () {
-                  Navigator.push(
+                onPressed: () async {
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(builder: (_) => const AddPerfumeScreen()),
-                  );
+                  ).then((_) {
+                    loadPerfumes();
+                  });
+                  ;
                 },
                 icon: const Icon(Icons.add),
                 label: const Text(
