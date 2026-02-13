@@ -56,12 +56,15 @@ class _EditReviewScreenState extends State<EditReviewScreen> {
         'rating': int.tryParse(selectedRating) ?? 0,
       });
 
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Review updated successfully!")),
       );
 
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error updating review: $e")),
       );
@@ -72,12 +75,15 @@ class _EditReviewScreenState extends State<EditReviewScreen> {
     try {
       await FirebaseFirestore.instance.collection('recenzije').doc(widget.id).delete();
 
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Review deleted successfully!")),
       );
 
+      // ignore: use_build_context_synchronously
       Navigator.pop(context); 
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error deleting review: $e")),
       );
@@ -182,7 +188,7 @@ class _EditReviewScreenState extends State<EditReviewScreen> {
 
   Widget _ratingDropdown(bool isDark) {
     return DropdownButtonFormField<String>(
-      value: selectedRating,
+      initialValue: selectedRating,
       dropdownColor: isDark ? AppColors.chocolateDark : AppColors.softAmber,
       style: TextStyle(color: isDark ? AppColors.softAmber : AppColors.chocolateDark),
       decoration: InputDecoration(

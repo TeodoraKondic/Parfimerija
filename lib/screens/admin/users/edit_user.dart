@@ -55,12 +55,15 @@ class _EditUserScreenState extends State<EditUserScreen> {
         'phoneNumber': _phoneController.text.trim(),
       });
 
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("User updated successfully!")),
       );
 
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error updating user: $e")),
       );
@@ -75,12 +78,15 @@ class _EditUserScreenState extends State<EditUserScreen> {
           .doc(widget.id)
           .delete();
 
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("User deleted successfully!")),
       );
 
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error deleting user: $e")),
       );

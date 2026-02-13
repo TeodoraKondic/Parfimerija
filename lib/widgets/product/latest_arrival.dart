@@ -74,7 +74,7 @@ class LatestArrivalProductsWidget extends StatelessWidget {
               brand: product.brand,
               price: product.price.toString(),
               image: product.imageUrl,
-              description: product.description //?? "No description available",
+              description: product.description, //?? "No description available",
             ),
           ),
         );

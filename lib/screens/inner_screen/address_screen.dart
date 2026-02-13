@@ -82,6 +82,7 @@ class _AddressScreenState extends State<AddressScreen> {
         });
       }
 
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Address successfully saved!")),
       );

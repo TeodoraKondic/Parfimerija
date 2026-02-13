@@ -90,7 +90,7 @@ class ReviewScreenAdmin extends StatelessWidget {
 
                 return ListView.separated(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  separatorBuilder: (_, _) => const SizedBox(height: 12),
                   itemCount: reviews.length,
                   itemBuilder: (context, index) {
                     final data =

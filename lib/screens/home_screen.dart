@@ -141,6 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ProductDetailsScreen(
+                            //id: perfume.id,
                             title: perfume.name,
                             brand: perfume.brand,
                             price: perfume.price

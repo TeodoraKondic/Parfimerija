@@ -78,7 +78,7 @@ class OrderManagementScreen extends StatelessWidget {
                 return ListView.separated(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: ordersDocs.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  separatorBuilder: (_, _) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
                     final data =
                         ordersDocs[index].data() as Map<String, dynamic>;

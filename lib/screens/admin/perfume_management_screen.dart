@@ -27,7 +27,7 @@ class _PerfumeManagementScreenState extends State<PerfumeManagementScreen> {
   }
 
   Future<void> loadPerfumes() async {
-    perfumes = await _service.getProducts(); // Učitava iz baze / servisa
+    perfumes = await _service.getProducts(); 
     setState(() {
       isLoading = false;
     });
@@ -135,6 +135,7 @@ class _PerfumeManagementScreenState extends State<PerfumeManagementScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (_) => ProductDetailsScreen(
+                            //id:perfume.id,
                             title: perfume.name,
                             brand: perfume.brand,
                             price: perfume.price.toString(),

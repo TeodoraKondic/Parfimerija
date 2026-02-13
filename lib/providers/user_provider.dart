@@ -47,7 +47,6 @@ class UserProvider extends ChangeNotifier {
   Future<void> updateUser(Map<String, dynamic> updates) async {
     if (_user == null) return;
     try {
-      final uid = updates['uid'] ?? _user!.email; 
       final userDoc = FirebaseFirestore.instance
           .collection('korisnici')
           .doc(updates['uid'] ?? _user!.email);
@@ -75,16 +74,4 @@ class UserProvider extends ChangeNotifier {
 }
 
 extension on UserModel {
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'email': email,
-      'address': address,
-      'phoneNumber': phoneNumber,
-      'role': role,
-      'password': password,
-      'userImage': userImage,
-      //'uid': uid 
-    };
-  }
 }

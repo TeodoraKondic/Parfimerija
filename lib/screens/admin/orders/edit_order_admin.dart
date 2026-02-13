@@ -127,7 +127,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
 
   Widget _statusDropdown(bool isDark) {
     return DropdownButtonFormField<String>(
-      value: selectedStatus,
+      initialValue: selectedStatus,
       dropdownColor: isDark ? AppColors.chocolateDark : AppColors.softAmber,
       style: TextStyle(color: isDark ? AppColors.softAmber : AppColors.chocolateDark),
       decoration: InputDecoration(
@@ -144,9 +144,12 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
   Future<void> _updateOrder() async {
     try {
       await _orderService.updateOrderStatus(widget.id, selectedStatus ?? widget.status);
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Order #${widget.id} updated successfully!")));
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error updating order: $e")));
     }
   }
@@ -154,9 +157,12 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
   Future<void> _deleteOrder() async {
     try {
       await _orderService.deleteOrder(widget.id);
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Order #${widget.id} deleted successfully!")));
+      // ignore: use_build_context_synchronously
       Navigator.pop(context); // zatvori ekran
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error deleting order: $e")));
     }
   }

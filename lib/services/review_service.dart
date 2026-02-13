@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ReviewService {
   final CollectionReference _reviews =
-      FirebaseFirestore.instance.collection('reviews');
+      FirebaseFirestore.instance.collection('recenzije');
 
   Future<List<Map<String, dynamic>>> getReviews() async {
     final snapshot = await _reviews.get();
