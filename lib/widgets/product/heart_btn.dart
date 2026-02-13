@@ -48,4 +48,3 @@ class _HeartButtonWidgetState extends State<HeartButtonWidget> {
     );
   }
 }
-

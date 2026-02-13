@@ -126,4 +126,3 @@ class _WishlistScreenState extends State<WishlistScreen> {
             ),
           );
   }*/
-
