@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
@@ -24,7 +23,6 @@ class OrderManagementScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: SizedBox(
@@ -53,12 +51,10 @@ class OrderManagementScreen extends StatelessWidget {
             ),
           ),
 
-       
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('porudzbine')
-                  
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -71,9 +67,12 @@ class OrderManagementScreen extends StatelessWidget {
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return const Center(
-                    child: Text("There are currently no orders in the database."),
+                    child: Text(
+                      "There are currently no orders in the database.",
+                    ),
                   );
                 }
+
                 final ordersDocs = snapshot.data!.docs;
 
                 return ListView.separated(
@@ -81,57 +80,93 @@ class OrderManagementScreen extends StatelessWidget {
                   itemCount: ordersDocs.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
-                    // Uzimamo podatke iz dokumenta
-                    final data = ordersDocs[index].data() as Map<String, dynamic>;
-                    
-                    // Izvlačenje polja (pazi da se imena poklapaju sa Firebase-om)
+                    final data =
+                        ordersDocs[index].data() as Map<String, dynamic>;
                     final String id = data['orderId']?.toString() ?? 'N/A';
                     final String productName = data['productName'] ?? 'No Name';
                     final String total = "${data['priceTotal']} RSD";
                     final String status = data['status'] ?? 'pending';
                     final int quantity = data['quantity'] ?? 0;
+                    final String uid = data['uid'] ?? '';
 
-                    return Card(
-                      color: isDark ? AppColors.softAmber : AppColors.chocolateDark,
-                      elevation: 3,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                        title: Text(
-                          "Order #$id",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: isDark ? AppColors.chocolateDark : AppColors.softAmber,
+                    return FutureBuilder<DocumentSnapshot>(
+                      future: FirebaseFirestore.instance
+                          .collection('korisnici')
+                          .doc(uid)
+                          .get(),
+                      builder: (context, userSnapshot) {
+                        String userName = "Loading...";
+
+                        if (userSnapshot.connectionState ==
+                            ConnectionState.done) {
+                          if (userSnapshot.hasData &&
+                              userSnapshot.data!.exists) {
+                            final userData =
+                                userSnapshot.data!.data()
+                                    as Map<String, dynamic>;
+
+                            userName =
+                                userData['name'] ??
+                                userData['fullName'] ??
+                                userData['username'] ??
+                                "Unknown User";
+                          } else {
+                            userName = "Unknown User";
+                          }
+                        }
+
+                        return Card(
+                          color: isDark
+                              ? AppColors.softAmber
+                              : AppColors.chocolateDark,
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                        ),
-                        subtitle: Text(
-                          "$productName (x$quantity) • $total • $status",
-                          style: TextStyle(
-                            color: isDark 
-                                ? AppColors.chocolateDark.withAlpha(180) 
-                                : AppColors.softAmber.withAlpha(180),
-                          ),
-                        ),
-                        trailing: Icon(
-                          Icons.chevron_right,
-                          color: isDark ? AppColors.chocolateDark : AppColors.softAmber,
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => EditOrderScreen(
-                                id: id,
-                                user: data['uid'] ?? 'Unknown User', 
-                                total: total,
-                                status: status,
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 4,
+                            ),
+                            title: Text(
+                              "Order #$id",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: isDark
+                                    ? AppColors.chocolateDark
+                                    : AppColors.softAmber,
                               ),
                             ),
-                          );
-                        },
-                      ),
+                            subtitle: Text(
+                              "$productName (x$quantity) • $total • $status\nBy: $userName",
+                              style: TextStyle(
+                                color: isDark
+                                    ? AppColors.chocolateDark.withAlpha(180)
+                                    : AppColors.softAmber.withAlpha(180),
+                              ),
+                            ),
+                            trailing: Icon(
+                              Icons.chevron_right,
+                              color: isDark
+                                  ? AppColors.chocolateDark
+                                  : AppColors.softAmber,
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => EditOrderScreen(
+                                    id: id,
+                                    user: userName,
+                                    total: total,
+                                    status: status,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
                     );
                   },
                 );

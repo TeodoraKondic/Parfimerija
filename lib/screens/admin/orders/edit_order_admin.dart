@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:provider/provider.dart';
+import '../../../services/order_service.dart';
 
 class EditOrderScreen extends StatefulWidget {
   final String id;
@@ -22,7 +23,8 @@ class EditOrderScreen extends StatefulWidget {
 }
 
 class _EditOrderScreenState extends State<EditOrderScreen> {
-  final List<String> statusOptions = ["Pending", "Shipped", "Delivered", "Cancelled", "Completed"];
+  final OrderService _orderService = OrderService();
+  final List<String> statusOptions = ["pending", "shipped", "delivered", "cancelled", "completed"];
   String? selectedStatus;
 
   @override
@@ -48,19 +50,12 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            
-            _inputSection(context, "Order ID", widget.id, isDark),
+            _inputSection("Order ID", widget.id, isDark, enabled: false),
             const SizedBox(height: 16),
-
-         
-            _inputSection(context, "User Name", widget.user, isDark),
+            _inputSection("User Name", widget.user, isDark, enabled: false),
             const SizedBox(height: 16),
-
-            
-            _inputSection(context, "Total Amount", widget.total, isDark),
+            _inputSection("Total Amount", widget.total, isDark, enabled: false),
             const SizedBox(height: 16),
-
-           
             Text(
               "Order Status",
               style: TextStyle(
@@ -70,11 +65,9 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
               ),
             ),
             const SizedBox(height: 8),
-            _statusDropdown(context, isDark),
-
+            _statusDropdown(isDark),
             const SizedBox(height: 30),
-
-           
+            // Dugme za update
             SizedBox(
               width: double.infinity,
               height: 55,
@@ -86,17 +79,11 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                 ),
                 icon: const Icon(Icons.save),
                 label: const Text("Save Changes", style: TextStyle(fontWeight: FontWeight.bold)),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Order #${widget.id} updated")),
-                  );
-                  Navigator.pop(context);
-                },
+                onPressed: _updateOrder,
               ),
             ),
             const SizedBox(height: 16),
-
-          
+            // Dugme za delete
             SizedBox(
               width: double.infinity,
               height: 55,
@@ -117,30 +104,20 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
     );
   }
 
-
-  Widget _inputSection(BuildContext context, String label, String initialValue, bool isDark) {
+  Widget _inputSection(String label, String value, bool isDark, {bool enabled = true}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: isDark ? AppColors.softAmber : AppColors.chocolateDark,
-          ),
-        ),
+        Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: isDark ? AppColors.softAmber : AppColors.chocolateDark)),
         const SizedBox(height: 8),
         TextFormField(
-          initialValue: initialValue,
+          initialValue: value,
+          enabled: enabled,
           style: TextStyle(color: isDark ? AppColors.softAmber : AppColors.chocolateDark),
           decoration: InputDecoration(
             filled: true,
             fillColor: isDark ? AppColors.chocolateDark : AppColors.softAmber,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
         ),
@@ -148,52 +125,54 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
     );
   }
 
-  
-  Widget _statusDropdown(BuildContext context, bool isDark) {
+  Widget _statusDropdown(bool isDark) {
     return DropdownButtonFormField<String>(
-      // ignore: deprecated_member_use
       value: selectedStatus,
       dropdownColor: isDark ? AppColors.chocolateDark : AppColors.softAmber,
       style: TextStyle(color: isDark ? AppColors.softAmber : AppColors.chocolateDark),
       decoration: InputDecoration(
         filled: true,
         fillColor: isDark ? AppColors.chocolateDark : AppColors.softAmber,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
-      items: statusOptions.map((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-      onChanged: (newValue) {
-        setState(() {
-          selectedStatus = newValue;
-        });
-      },
+      items: statusOptions.map((value) => DropdownMenuItem(value: value, child: Text(value))).toList(),
+      onChanged: (newValue) => setState(() => selectedStatus = newValue),
     );
+  }
+
+  Future<void> _updateOrder() async {
+    try {
+      await _orderService.updateOrderStatus(widget.id, selectedStatus ?? widget.status);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Order #${widget.id} updated successfully!")));
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error updating order: $e")));
+    }
+  }
+
+  Future<void> _deleteOrder() async {
+    try {
+      await _orderService.deleteOrder(widget.id);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Order #${widget.id} deleted successfully!")));
+      Navigator.pop(context); // zatvori ekran
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error deleting order: $e")));
+    }
   }
 
   void _showDeleteDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: const Text("Delete Order"),
-        content: const Text("Are you sure you want to delete this order?"),
+      builder: (ctx) => AlertDialog(
+        title: const Text("Confirm Delete"),
+        content: const Text("Delete this order permanently?"),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Cancel")),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Order deleted")),
-              );
+              Navigator.pop(ctx);
+              _deleteOrder();
             },
             child: const Text("Delete", style: TextStyle(color: Colors.red)),
           ),

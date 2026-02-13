@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 class ReviewScreenAdmin extends StatelessWidget {
   const ReviewScreenAdmin({super.key});
 
-  // Funkcija koja dohvaća korisničko ime po uid
+  
   Future<String> _getUserName(String uid) async {
     final doc =
         await FirebaseFirestore.instance.collection('korisnici').doc(uid).get();
@@ -20,7 +20,7 @@ class ReviewScreenAdmin extends StatelessWidget {
     return "Unknown user";
   }
 
-  // Funkcija koja dohvaća naziv parfema po productId
+
   Future<String> _getPerfumeName(String productId) async {
     final doc = await FirebaseFirestore.instance
         .collection('parfemi')
@@ -102,7 +102,7 @@ class ReviewScreenAdmin extends StatelessWidget {
                     final comment = data['comment'] ?? '';
                     final rating = (data['rating'] ?? 0).toString();
 
-                    // Koristimo FutureBuilder da dohvatimo stvarna imena
+                  
                     return FutureBuilder<List<String>>(
                       future: Future.wait([
                         _getUserName(uid),
