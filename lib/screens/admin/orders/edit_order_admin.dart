@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
@@ -25,12 +26,59 @@ class EditOrderScreen extends StatefulWidget {
 class _EditOrderScreenState extends State<EditOrderScreen> {
   final OrderService _orderService = OrderService();
   final List<String> statusOptions = ["pending", "shipped", "delivered", "cancelled", "completed"];
+  final List<String> paymentOptions = ["cash", "card"];
+
+  
   String? selectedStatus;
+  String? selectedPayment;
+  String? selectedUid;
+  String? selectedProductName;
+  double unitPrice = 0.0;
+  double priceTotal = 0.0;
+  bool _isLoading = true; 
+  final TextEditingController _quantityController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    selectedStatus = widget.status;
+    _fetchOrderDetails();
+  }
+
+  
+  Future<void> _fetchOrderDetails() async {
+    try {
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('porudzbine')
+          .doc(widget.id)
+          .get();
+
+      if (doc.exists) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        setState(() {
+          selectedStatus = data['status'] ?? widget.status;
+          selectedPayment = data['paymentMethod'] ?? "cash";
+          selectedUid = data['uid'] ?? widget.user;
+          selectedProductName = data['productName'];
+          _quantityController.text = (data['quantity'] ?? 1).toString();
+          priceTotal = (data['priceTotal'] as num).toDouble();
+          
+          
+          int qty = data['quantity'] ?? 1;
+          unitPrice = priceTotal / qty;
+          
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Greška pri učitavanju: $e");
+    }
+  }
+
+  void _calculateTotal() {
+    int qty = int.tryParse(_quantityController.text) ?? 0;
+    setState(() {
+      priceTotal = qty * unitPrice;
+    });
   }
 
   @override
@@ -40,131 +88,184 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: Text("Edit Order #${widget.id}"),
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _inputSection("Order ID", widget.id, isDark, enabled: false),
-            const SizedBox(height: 16),
-            _inputSection("User Name", widget.user, isDark, enabled: false),
-            const SizedBox(height: 16),
-            _inputSection("Total Amount", widget.total, isDark, enabled: false),
-            const SizedBox(height: 16),
-            Text(
-              "Order Status",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: isDark ? AppColors.softAmber : AppColors.chocolateDark,
-              ),
-            ),
-            const SizedBox(height: 8),
-            _statusDropdown(isDark),
-            const SizedBox(height: 30),
-            // Dugme za update
-            SizedBox(
-              width: double.infinity,
-              height: 55,
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.chocolateDark,
-                  foregroundColor: AppColors.softAmber,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-                icon: const Icon(Icons.save),
-                label: const Text("Save Changes", style: TextStyle(fontWeight: FontWeight.bold)),
-                onPressed: _updateOrder,
-              ),
-            ),
-            const SizedBox(height: 16),
-            // Dugme za delete
-            SizedBox(
-              width: double.infinity,
-              height: 55,
-              child: OutlinedButton.icon(
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.redAccent,
-                  side: const BorderSide(color: Colors.redAccent, width: 1.5),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-                icon: const Icon(Icons.delete),
-                label: const Text("Delete Order", style: TextStyle(fontWeight: FontWeight.bold)),
-                onPressed: () => _showDeleteDialog(context),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+      appBar: AppBar(title: Text("Edit Order #${widget.id}")),
+      body: _isLoading 
+        ? const Center(child: CircularProgressIndicator()) // Čekamo bazu
+        : SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _label("User", isDark),
+                _buildUserDropdown(isDark),
+                const SizedBox(height: 16),
 
-  Widget _inputSection(String label, String value, bool isDark, {bool enabled = true}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: isDark ? AppColors.softAmber : AppColors.chocolateDark)),
-        const SizedBox(height: 8),
-        TextFormField(
-          initialValue: value,
-          enabled: enabled,
-          style: TextStyle(color: isDark ? AppColors.softAmber : AppColors.chocolateDark),
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: isDark ? AppColors.chocolateDark : AppColors.softAmber,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                _label("Perfume", isDark),
+                _buildProductDropdown(isDark),
+                const SizedBox(height: 16),
+
+                _label("Quantity", isDark),
+                TextField(
+                  controller: _quantityController,
+                  keyboardType: TextInputType.number,
+                  style: TextStyle(color: isDark ? AppColors.softAmber : AppColors.chocolateDark),
+                  onChanged: (value) => _calculateTotal(),
+                  decoration: _inputDecoration(isDark),
+                ),
+                const SizedBox(height: 16),
+
+                _label("Payment method", isDark),
+                _buildGenericDropdown(paymentOptions, selectedPayment!, (val) => setState(() => selectedPayment = val), isDark),
+                const SizedBox(height: 16),
+
+                _label("Status", isDark),
+                _buildGenericDropdown(statusOptions, selectedStatus!, (val) => setState(() => selectedStatus = val), isDark),
+                const SizedBox(height: 16),
+
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    // ignore: deprecated_member_use
+                    color: isDark ? AppColors.chocolateDark.withOpacity(0.5) : AppColors.softAmber.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("Total:", style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text("$priceTotal RSD", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green)),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 30),
+
+                SizedBox(
+                  width: double.infinity,
+                  height: 55,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.chocolateDark,
+                      foregroundColor: AppColors.softAmber,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    icon: const Icon(Icons.save),
+                    label: const Text("Save Changes"),
+                    onPressed: _updateOrder,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                
+            
+                _deleteButton(),
+              ],
+            ),
           ),
-        ),
-      ],
     );
   }
 
-  Widget _statusDropdown(bool isDark) {
-    return DropdownButtonFormField<String>(
-      initialValue: selectedStatus,
-      dropdownColor: isDark ? AppColors.chocolateDark : AppColors.softAmber,
-      style: TextStyle(color: isDark ? AppColors.softAmber : AppColors.chocolateDark),
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: isDark ? AppColors.chocolateDark : AppColors.softAmber,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      ),
-      items: statusOptions.map((value) => DropdownMenuItem(value: value, child: Text(value))).toList(),
-      onChanged: (newValue) => setState(() => selectedStatus = newValue),
-    );
-  }
 
   Future<void> _updateOrder() async {
     try {
-      await _orderService.updateOrderStatus(widget.id, selectedStatus ?? widget.status);
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Order #${widget.id} updated successfully!")));
-      // ignore: use_build_context_synchronously
-      Navigator.pop(context);
+      await FirebaseFirestore.instance.collection('porudzbine').doc(widget.id).update({
+        "uid": selectedUid,
+        "productName": selectedProductName,
+        "quantity": int.tryParse(_quantityController.text) ?? 1,
+        "priceTotal": priceTotal,
+        "status": selectedStatus,
+        "paymentMethod": selectedPayment,
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Uspešno izmenjeno!")));
+        Navigator.pop(context);
+      }
     } catch (e) {
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error updating order: $e")));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Greška: $e")));
     }
   }
 
-  Future<void> _deleteOrder() async {
-    try {
-      await _orderService.deleteOrder(widget.id);
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Order #${widget.id} deleted successfully!")));
-      // ignore: use_build_context_synchronously
-      Navigator.pop(context); // zatvori ekran
-    } catch (e) {
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error deleting order: $e")));
-    }
+
+  Widget _buildUserDropdown(bool isDark) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('korisnici').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return const LinearProgressIndicator();
+        return _dropdownWrapper(isDark, DropdownButton<String>(
+          value: selectedUid,
+          isExpanded: true,
+          underline: const SizedBox(),
+          items: snapshot.data!.docs.map((doc) => DropdownMenuItem(
+            value: doc.id,
+            child: Text(doc['name'] ?? "Nema imena"),
+          )).toList(),
+          onChanged: (val) => setState(() => selectedUid = val),
+        ));
+      },
+    );
+  }
+
+  Widget _buildProductDropdown(bool isDark) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('parfemi').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return const LinearProgressIndicator();
+        return _dropdownWrapper(isDark, DropdownButton<String>(
+          value: selectedProductName,
+          isExpanded: true,
+          underline: const SizedBox(),
+          items: snapshot.data!.docs.map((doc) => DropdownMenuItem(
+            value: doc['name'].toString(),
+            onTap: () {
+              unitPrice = (doc['price'] as num).toDouble();
+              _calculateTotal();
+            },
+            child: Text("${doc['name']} (${doc['price']} RSD)"),
+          )).toList(),
+          onChanged: (val) => setState(() => selectedProductName = val),
+        ));
+      },
+    );
+  }
+
+  Widget _buildGenericDropdown(List<String> items, String current, Function(String?) onChange, bool isDark) {
+    return _dropdownWrapper(isDark, DropdownButton<String>(
+      value: current, isExpanded: true, underline: const SizedBox(),
+      items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+      onChanged: onChange,
+    ));
+  }
+
+  Widget _label(String text, bool isDark) => Padding(
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Text(text, style: TextStyle(fontWeight: FontWeight.bold, color: isDark ? AppColors.softAmber : AppColors.chocolateDark)),
+  );
+
+  InputDecoration _inputDecoration(bool isDark) => InputDecoration(
+    filled: true, fillColor: isDark ? AppColors.chocolateDark : AppColors.softAmber,
+    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+  );
+
+  Widget _dropdownWrapper(bool isDark, Widget child) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12),
+    decoration: BoxDecoration(color: isDark ? AppColors.chocolateDark : AppColors.softAmber, borderRadius: BorderRadius.circular(12)),
+    child: child,
+  );
+
+  Widget _deleteButton() {
+     return SizedBox(
+      width: double.infinity,
+      height: 55,
+      child: OutlinedButton.icon(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: Colors.redAccent,
+          side: const BorderSide(color: Colors.redAccent),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+        icon: const Icon(Icons.delete),
+        label: const Text("Delete Order"),
+        onPressed: () => _showDeleteDialog(context),
+      ),
+    );
   }
 
   void _showDeleteDialog(BuildContext context) {
@@ -175,13 +276,10 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
         content: const Text("Delete this order permanently?"),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Cancel")),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              _deleteOrder();
-            },
-            child: const Text("Delete", style: TextStyle(color: Colors.red)),
-          ),
+          TextButton(onPressed: () { 
+            Navigator.pop(ctx); 
+             _orderService.deleteOrder(widget.id).then((_) => Navigator.pop(context));
+          }, child: const Text("Delete", style: TextStyle(color: Colors.red))),
         ],
       ),
     );
