@@ -1,40 +1,112 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:provider/provider.dart';
 
-class EditUserScreen extends StatelessWidget {
+class EditUserScreen extends StatefulWidget {
+  final String id;
   final String name;
   final String email;
   final String phone;
 
   const EditUserScreen({
     super.key,
+    required this.id,
     required this.name,
     required this.email,
     required this.phone,
   });
 
   @override
+  State<EditUserScreen> createState() => _EditUserScreenState();
+}
+
+class _EditUserScreenState extends State<EditUserScreen> {
+  late TextEditingController _nameController;
+  late TextEditingController _emailController;
+  late TextEditingController _phoneController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.name);
+    _emailController = TextEditingController(text: widget.email);
+    _phoneController = TextEditingController(text: widget.phone);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  // 🔹 UPDATE USER
+  Future<void> _updateUser() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('korisnici')
+          .doc(widget.id)
+          .update({
+        'name': _nameController.text.trim(),
+        'email': _emailController.text.trim(),
+        'phoneNumber': _phoneController.text.trim(),
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("User updated successfully!")),
+      );
+
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error updating user: $e")),
+      );
+    }
+  }
+
+  // 🔹 DELETE USER
+  Future<void> _deleteUser() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('korisnici')
+          .doc(widget.id)
+          .delete();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("User deleted successfully!")),
+      );
+
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error deleting user: $e")),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final isDark = themeProvider.getIsDarkTheme;
+    final isDark = Provider.of<ThemeProvider>(context).getIsDarkTheme;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text("Edit User"),
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            _field(context, "Name", name, isDark),
-            _field(context, "Email", email, isDark),
-            _field(context, "Phone", phone, isDark),
+            _field("Name", _nameController, isDark),
+            _field("Email", _emailController, isDark),
+            _field("Phone", _phoneController, isDark),
+
             const SizedBox(height: 24),
+
+            // UPDATE
             SizedBox(
               width: double.infinity,
               height: 50,
@@ -42,19 +114,19 @@ class EditUserScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.chocolateDark,
                   foregroundColor: AppColors.softAmber,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
                 icon: const Icon(Icons.save),
                 label: const Text("Save Changes"),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("User updated (fake action)")),
-                  );
-                  Navigator.pop(context);
-                },
+                onPressed: _updateUser,
               ),
             ),
+
             const SizedBox(height: 16),
+
+            // DELETE
             SizedBox(
               width: double.infinity,
               height: 50,
@@ -62,7 +134,9 @@ class EditUserScreen extends StatelessWidget {
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.redAccent,
                   side: const BorderSide(color: Colors.redAccent),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
                 icon: const Icon(Icons.delete),
                 label: const Text("Delete User"),
@@ -75,44 +149,53 @@ class EditUserScreen extends StatelessWidget {
     );
   }
 
-  Widget _field(BuildContext context, String label, String initialValue, bool isDark) {
+  // 🔹 INPUT FIELD
+  Widget _field(
+      String label, TextEditingController controller, bool isDark) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: TextFormField(
-        initialValue: initialValue,
-        style: TextStyle(color: isDark ? AppColors.softAmber : AppColors.chocolateDark),
+      child: TextField(
+        controller: controller,
+        style: TextStyle(
+            color:
+                isDark ? AppColors.softAmber : AppColors.chocolateDark),
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(color: isDark ? AppColors.softAmber.withValues(alpha:0.7) : AppColors.chocolateDark.withValues(alpha:0.7)),
           filled: true,
-          fillColor: isDark ? AppColors.chocolateDark : AppColors.softAmber,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-          floatingLabelStyle: TextStyle(color: isDark ? AppColors.softAmber : AppColors.chocolateDark, fontWeight: FontWeight.bold),
+          fillColor:
+              isDark ? AppColors.chocolateDark : AppColors.softAmber,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
         ),
       ),
     );
   }
 
+
   void _showDeleteDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      builder: (ctx) => AlertDialog(
         title: const Text("Delete User"),
-        content: const Text("Are you sure you want to delete this user?"),
+        content:
+            const Text("Are you sure you want to delete this user?"),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text("Cancel")),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("User deleted (fake action)")),
-              );
+              Navigator.pop(ctx);
+              _deleteUser();
             },
-            child: const Text("Delete", style: TextStyle(color: Colors.red)),
+            child: const Text("Delete",
+                style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
     );
   }
 }
+
