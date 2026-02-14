@@ -9,30 +9,6 @@ import 'package:provider/provider.dart';
 class ReviewScreenAdmin extends StatelessWidget {
   const ReviewScreenAdmin({super.key});
 
-  
-  Future<String> _getUserName(String uid) async {
-    final doc =
-        await FirebaseFirestore.instance.collection('korisnici').doc(uid).get();
-    if (doc.exists) {
-      final data = doc.data();
-      return "${data?['name'] ?? ''} ${data?['surname'] ?? ''}";
-    }
-    return "Unknown user";
-  }
-
-
-  Future<String> _getPerfumeName(String productId) async {
-    final doc = await FirebaseFirestore.instance
-        .collection('parfemi')
-        .doc(productId)
-        .get();
-    if (doc.exists) {
-      final data = doc.data();
-      return data?['name'] ?? 'Unknown perfume';
-    }
-    return "Unknown perfume";
-  }
-
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -41,7 +17,7 @@ class ReviewScreenAdmin extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text("Review Management"),
+        title: const Text("Review management"),
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
       ),
@@ -57,125 +33,143 @@ class ReviewScreenAdmin extends StatelessWidget {
                   backgroundColor: AppColors.chocolateDark,
                   foregroundColor: AppColors.softAmber,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const AddReviewScreen()),
+                    MaterialPageRoute(
+                      builder: (_) => const AddReviewScreen(),
+                    ),
                   );
                 },
                 icon: const Icon(Icons.rate_review),
                 label: const Text(
-                  "Add Review",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  "Add review",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ),
           ),
+
+          // --- LISTA RECENZIJA ---
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream:
-                  FirebaseFirestore.instance.collection('recenzije').snapshots(),
+              stream: FirebaseFirestore.instance
+                  .collection('recenzije')
+                  .orderBy('createdAt', descending: true)
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 }
 
                 final reviews = snapshot.data!.docs;
 
                 if (reviews.isEmpty) {
-                  return const Center(child: Text("No reviews yet."));
+                  return const Center(
+                    child: Text("No reviews yet."),
+                  );
                 }
 
                 return ListView.separated(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  separatorBuilder: (_, _) => const SizedBox(height: 12),
+                  separatorBuilder: (_, _) =>
+                      const SizedBox(height: 12),
                   itemCount: reviews.length,
                   itemBuilder: (context, index) {
-                    final data =
-                        reviews[index].data() as Map<String, dynamic>;
+                    final data = reviews[index]
+                        .data() as Map<String, dynamic>;
+
                     final recId = reviews[index].id;
 
-                    final uid = data['uid'] ?? '';
-                    final productId = data['productId'] ?? '';
-                    final comment = data['comment'] ?? '';
-                    final rating = (data['rating'] ?? 0).toString();
+               
+                    final userName =
+                        data['userName'] ?? "Unknown user";
 
-                  
-                    return FutureBuilder<List<String>>(
-                      future: Future.wait([
-                        _getUserName(uid),
-                        _getPerfumeName(productId),
-                      ]),
-                      builder: (context, snapshot) {
-                        String userName = "Loading...";
-                        String perfumeName = "Loading...";
+                    final perfumeName =
+                        data['perfumeName'] ??
+                            "Unknown perfume";
 
-                        if (snapshot.hasData) {
-                          userName = snapshot.data![0];
-                          perfumeName = snapshot.data![1];
-                        }
+                    // Podrška i za stare recenzije
+                    final comment =
+                        data['reviewText'] ??
+                            data['comment'] ??
+                            '';
 
-                        return Card(
-                          color: isDark
-                              ? AppColors.softAmber
-                              : AppColors.chocolateDark,
-                          elevation: 3,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          child: ListTile(
-                            title: Text(
-                              "$perfumeName ($rating/10)",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: isDark
-                                    ? AppColors.chocolateDark
-                                    : AppColors.softAmber,
-                              ),
-                            ),
-                            subtitle: Text(
-                              "By: $userName\n$comment",
-                              style: TextStyle(
-                                color: (isDark
-                                        ? AppColors.chocolateDark
-                                        : AppColors.softAmber)
-                                    .withAlpha(180),
-                              ),
-                            ),
-                            trailing: Icon(Icons.chevron_right,
-                                color: isDark
-                                    ? AppColors.chocolateDark
-                                    : AppColors.softAmber),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => EditReviewScreen(
-                                    id: recId,
-                                    user: userName,
-                                    perfume: perfumeName,
-                                    text: comment,
-                                    rating: rating,
-                                  ),
-                                ),
-                              );
-                            },
+                    final rating =
+                        (data['rating'] ?? 0).toString();
+
+                    return Card(
+                      color: isDark
+                          ? AppColors.softAmber
+                          : AppColors.chocolateDark,
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(12),
+                      ),
+                      child: ListTile(
+                        title: Text(
+                          "$perfumeName ($rating/10)",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: isDark
+                                ? AppColors.chocolateDark
+                                : AppColors.softAmber,
                           ),
-                        );
-                      },
+                        ),
+                        subtitle: Text(
+                          "By: $userName\n$comment",
+                          style: TextStyle(
+                            color: (isDark
+                                    ? AppColors.chocolateDark
+                                    : AppColors.softAmber)
+                                .withAlpha(180),
+                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.chevron_right,
+                          color: isDark
+                              ? AppColors.chocolateDark
+                              : AppColors.softAmber,
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  EditReviewScreen(
+                                id: recId,
+                                user: userName,
+                                perfume: perfumeName,
+                                text: comment,
+                                rating: rating,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     );
                   },
                 );
               },
             ),
           ),
+
           const SizedBox(height: 16),
         ],
       ),
     );
   }
 }
+
 
 
 

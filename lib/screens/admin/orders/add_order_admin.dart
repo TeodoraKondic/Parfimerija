@@ -64,9 +64,10 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
       });
 
       if (mounted) {
-        Navigator.pop(context); // Zatvara ekran i vraća se na listu koja se sama osvežava
+        Navigator.pop(context); 
       }
     } catch (e) {
+      // ignore: avoid_print
       print("Error: $e");
     }
   }

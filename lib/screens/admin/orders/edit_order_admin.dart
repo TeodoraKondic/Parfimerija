@@ -70,7 +70,8 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
         });
       }
     } catch (e) {
-      print("Greška pri učitavanju: $e");
+      // ignore: avoid_print
+      print("Loading error: $e");
     }
   }
 
@@ -88,9 +89,9 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(title: Text("Edit Order #${widget.id}")),
+      appBar: AppBar(title: Text("Edit order #${widget.id}")),
       body: _isLoading 
-        ? const Center(child: CircularProgressIndicator()) // Čekamo bazu
+        ? const Center(child: CircularProgressIndicator())
         : SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -133,7 +134,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text("Total:", style: TextStyle(fontWeight: FontWeight.bold)),
-                      Text("$priceTotal RSD", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green)),
+                      Text("$priceTotal RSD", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
@@ -149,7 +150,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     icon: const Icon(Icons.save),
-                    label: const Text("Save Changes"),
+                    label: const Text("Save changes"),
                     onPressed: _updateOrder,
                   ),
                 ),
@@ -176,11 +177,12 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Uspešno izmenjeno!")));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Successfully edited!")));
         Navigator.pop(context);
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Greška: $e")));
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
     }
   }
 
@@ -196,7 +198,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
           underline: const SizedBox(),
           items: snapshot.data!.docs.map((doc) => DropdownMenuItem(
             value: doc.id,
-            child: Text(doc['name'] ?? "Nema imena"),
+            child: Text(doc['name'] ?? "No name"),
           )).toList(),
           onChanged: (val) => setState(() => selectedUid = val),
         ));
@@ -262,7 +264,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
         icon: const Icon(Icons.delete),
-        label: const Text("Delete Order"),
+        label: const Text("Delete order"),
         onPressed: () => _showDeleteDialog(context),
       ),
     );
@@ -272,12 +274,13 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text("Confirm Delete"),
+        title: const Text("Confirm delete"),
         content: const Text("Delete this order permanently?"),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Cancel")),
           TextButton(onPressed: () { 
             Navigator.pop(ctx); 
+             // ignore: use_build_context_synchronously
              _orderService.deleteOrder(widget.id).then((_) => Navigator.pop(context));
           }, child: const Text("Delete", style: TextStyle(color: Colors.red))),
         ],
