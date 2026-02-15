@@ -70,7 +70,14 @@ class ProductWidgetState extends State<ProductWidget> {
                       color: Theme.of(context).textTheme.titleLarge?.color,
                     ),
                   ),
-                  Flexible(flex: 2, child: const HeartButtonWidget()),
+                  //Flexible(flex: 2, child: const HeartButtonWidget()),
+                  Flexible(
+                    flex: 2,
+                    child: Provider<Product>.value(
+                      value: product,
+                      child: const HeartButtonWidget(),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -99,16 +106,13 @@ class ProductWidgetState extends State<ProductWidget> {
                       child: InkWell(
                         borderRadius: BorderRadius.circular(12.0),
                         onTap: () {
-                          // 1. Uzimamo provider
                           final cartProvider = Provider.of<CartProvider>(
                             context,
                             listen: false,
                           );
 
-                          // 2. Dodajemo proizvod u korpu
                           cartProvider.addProduct(product);
 
-                          // 3. Opciono: Pokazujemo poruku da je dodato
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text("${product.name} added to cart!"),

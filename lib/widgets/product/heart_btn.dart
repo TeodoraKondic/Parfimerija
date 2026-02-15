@@ -1,8 +1,11 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:provider/provider.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
+import 'package:parfimerija_app/models/product.dart';
+import 'package:parfimerija_app/providers/wishlist_provider.dart';
 
 class HeartButtonWidget extends StatefulWidget {
   const HeartButtonWidget({
@@ -19,11 +22,18 @@ class HeartButtonWidget extends StatefulWidget {
 }
 
 class _HeartButtonWidgetState extends State<HeartButtonWidget> {
-  bool isLiked = false;
-
   @override
   Widget build(BuildContext context) {
+
     bool isDark = Provider.of<ThemeProvider>(context).getIsDarkTheme;
+    
+   
+    final wishlistProvider = Provider.of<WishlistProvider>(context);
+   
+    final product = Provider.of<Product>(context);
+
+ 
+    bool isInWishlist = wishlistProvider.isProductInWishlist(productId: product.id);
 
     return Container(
       decoration: BoxDecoration(
@@ -33,14 +43,14 @@ class _HeartButtonWidgetState extends State<HeartButtonWidget> {
       child: IconButton(
         style: IconButton.styleFrom(elevation: 10),
         onPressed: () {
-          setState(() {
-            isLiked = !isLiked;
-          });
+        
+          wishlistProvider.addOrRemoveFromWishlist(product: product);
         },
         icon: Icon(
-          isLiked ? IconlyBold.heart : IconlyLight.heart, // Puno srce kad je lajkovano
+         
+          isInWishlist ? IconlyBold.heart : IconlyLight.heart, 
           size: widget.size,
-          color: isLiked
+          color: isInWishlist
               ? Colors.red
               : (isDark ? AppColors.lightVanilla : AppColors.chocolateDark),
         ),
