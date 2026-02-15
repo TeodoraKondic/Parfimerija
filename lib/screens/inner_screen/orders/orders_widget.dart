@@ -13,6 +13,7 @@ class OrdersWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
     final size = MediaQuery.of(context).size;
 
     return Padding(

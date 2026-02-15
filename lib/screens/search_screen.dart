@@ -21,6 +21,7 @@ class SearchScreenState extends State<SearchScreen> {
   late TextEditingController searchTextController;
   List<Product> latestArrivals = [];
   List<Product> mostPopular = [];
+  List<Product> filteredMostPopular = [];
   bool isLoading = true;
 
   @override
@@ -41,10 +42,13 @@ class SearchScreenState extends State<SearchScreen> {
       final allProducts = await ProductService().getProducts();
 
       setState(() {
-        // uzmi poslednjih 6 za Latest Arrivals
+       
         latestArrivals = allProducts.reversed.take(6).toList();
-        // uzmi prvih 10 za Most Popular (ili po logici baze)
+
         mostPopular = allProducts.toList();
+
+        filteredMostPopular = List.from(mostPopular);
+
         isLoading = false;
       });
     } catch (e) {
@@ -56,6 +60,16 @@ class SearchScreenState extends State<SearchScreen> {
         SnackBar(content: Text("Failed to load products: $e")),
       );
     }
+  }
+
+  void filterProducts(String query) {
+    final lowerQuery = query.toLowerCase().trim();
+
+    setState(() {
+      filteredMostPopular = mostPopular
+          .where((p) => p.name.toLowerCase().contains(lowerQuery))
+          .toList();
+    });
   }
 
   @override
@@ -85,8 +99,12 @@ class SearchScreenState extends State<SearchScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                        
                           TextField(
                             controller: searchTextController,
+                            onChanged: (value) {
+                              filterProducts(value);
+                            },
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Provider.of<ThemeProvider>(context).getIsDarkTheme
@@ -95,8 +113,9 @@ class SearchScreenState extends State<SearchScreen> {
                               prefixIcon: const Icon(Icons.search),
                               suffixIcon: IconButton(
                                 onPressed: () {
-                                  FocusScope.of(context).unfocus();
                                   searchTextController.clear();
+                                  filterProducts(""); 
+                                  FocusScope.of(context).unfocus();
                                 },
                                 icon: const Icon(Icons.clear),
                               ),
@@ -104,7 +123,7 @@ class SearchScreenState extends State<SearchScreen> {
                           ),
                           const SizedBox(height: 25.0),
 
-                          // Latest Arrivals
+                      
                           Text(
                             "Latest Arrivals",
                             style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -112,7 +131,6 @@ class SearchScreenState extends State<SearchScreen> {
                                 ),
                           ),
                           const SizedBox(height: 12),
-
                           SizedBox(
                             height: 330,
                             child: latestArrivals.isEmpty
@@ -131,7 +149,7 @@ class SearchScreenState extends State<SearchScreen> {
                           ),
                           const SizedBox(height: 50.0),
 
-                          // Most Popular
+                  
                           Text(
                             "Most Popular",
                             style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -146,12 +164,12 @@ class SearchScreenState extends State<SearchScreen> {
                     SliverPadding(
                       padding: const EdgeInsets.only(bottom: 20),
                       sliver: SliverDynamicHeightGridView(
-                        itemCount: mostPopular.length,
+                        itemCount: filteredMostPopular.length,
                         crossAxisCount: 2,
                         mainAxisSpacing: 16,
                         crossAxisSpacing: 16,
                         builder: (context, index) {
-                          final product = mostPopular[index];
+                          final product = filteredMostPopular[index];
                           return ProductWidget(product: product);
                         },
                       ),
@@ -163,4 +181,3 @@ class SearchScreenState extends State<SearchScreen> {
     );
   }
 }
-
