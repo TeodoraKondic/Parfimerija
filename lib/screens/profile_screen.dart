@@ -5,6 +5,7 @@ import 'package:parfimerija_app/const/app_colors.dart';
 import 'package:parfimerija_app/main.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:parfimerija_app/providers/user_provider.dart';
+import 'package:parfimerija_app/screens/admin/review/add_rewiev_admin.dart';
 import 'package:parfimerija_app/screens/inner_screen/address_screen.dart';
 import 'package:parfimerija_app/screens/inner_screen/edit_profile/change_password_screen.dart';
 import 'package:parfimerija_app/screens/inner_screen/edit_profile/edit_profile_screen.dart';
@@ -96,7 +97,7 @@ class ProfileScreen extends StatelessWidget {
                       Navigator.pushNamed(context, AddressScreen.routName);
                     },
                   ),
-                
+
                   const SizedBox(height: 20),
 
                   const TitelesTextWidget(label: "Security"),
@@ -125,6 +126,40 @@ class ProfileScreen extends StatelessWidget {
                     onChanged: (value) {
                       themeProvider.setDarkTheme(themeValue: value);
                     },
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // DUGME ZA ADD REVIEW
+                  Center(
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: themeProvider.getIsDarkTheme
+                            ? AppColors.chocolateDark
+                            : AppColors.softAmber,
+                        foregroundColor: themeProvider.getIsDarkTheme
+                            ? AppColors.softAmber
+                            : AppColors.chocolateDark,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30,
+                          vertical: 12,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: () {
+                        // Ovo vodi na screen gde korisnik dodaje recenziju
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const AddReviewScreen(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.rate_review),
+                      label: const Text("Add Review"),
+                    ),
                   ),
 
                   const SizedBox(height: 20),

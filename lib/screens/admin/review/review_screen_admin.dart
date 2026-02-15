@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
-import 'package:parfimerija_app/screens/admin/review/add_rewiev_admin.dart';
 import 'package:parfimerija_app/screens/admin/review/edit_review_admin.dart';
 import 'package:provider/provider.dart';
 
@@ -23,40 +22,6 @@ class ReviewScreenAdmin extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.chocolateDark,
-                  foregroundColor: AppColors.softAmber,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const AddReviewScreen(),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.rate_review),
-                label: const Text(
-                  "Add review",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          // --- LISTA RECENZIJA ---
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
@@ -169,7 +134,3 @@ class ReviewScreenAdmin extends StatelessWidget {
     );
   }
 }
-
-
-
-

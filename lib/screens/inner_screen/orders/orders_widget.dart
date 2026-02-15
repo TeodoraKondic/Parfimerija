@@ -1,6 +1,6 @@
-import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+//import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
-import 'package:parfimerija_app/const/app_consts.dart';
+//import 'package:parfimerija_app/const/app_consts.dart';
 import 'package:parfimerija_app/widgets/subtitle_text.dart';
 import 'package:parfimerija_app/widgets/title_text.dart';
 
@@ -20,7 +20,7 @@ class OrdersWidget extends StatelessWidget {
       child: Row(
         children: [
          
-          ClipRRect(
+         /* ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: FancyShimmerImage(
               height: size.width * 0.25,
@@ -29,7 +29,7 @@ class OrdersWidget extends StatelessWidget {
               //imageUrl: orderData['imageUrl'] ?? AppConstants.imageUrl,
               imageUrl: orderData['productImage'] ?? AppConstants.imageUrl,
             ),
-          ),
+          ),*/
           
           Flexible(
             child: Padding(
