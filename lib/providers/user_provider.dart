@@ -5,9 +5,16 @@ import 'package:parfimerija_app/models/user_model.dart';
 class UserProvider extends ChangeNotifier {
   UserModel? _user;
 
+
   UserModel? get getUser => _user;
-  bool get isAdmin => _user != null && _user!.role == 'admin';
+
   
+  bool get isAdmin => _user != null && _user!.role == 'admin';
+
+  
+  bool get isLoggedIn => _user != null;
+
+
   Future<void> fetchUserInfo(String identifier, {bool byUid = false}) async {
     try {
       DocumentSnapshot doc;
@@ -17,7 +24,6 @@ class UserProvider extends ChangeNotifier {
             .doc(identifier)
             .get();
       } else {
-        
         final query = await FirebaseFirestore.instance
             .collection('korisnici')
             .where('email', isEqualTo: identifier)
@@ -43,7 +49,7 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-  
+ 
   Future<void> updateUser(Map<String, dynamic> updates) async {
     if (_user == null) return;
     try {
@@ -51,10 +57,8 @@ class UserProvider extends ChangeNotifier {
           .collection('korisnici')
           .doc(updates['uid'] ?? _user!.email);
 
-      
       await userDoc.set(updates, SetOptions(merge: true));
 
-   
       _user = UserModel.fromFirestore({
         ...(_user!.toMap()),
         ...updates,
@@ -66,12 +70,10 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
- 
+  
   void clearUser() {
     _user = null;
     notifyListeners();
   }
 }
 
-extension on UserModel {
-}
