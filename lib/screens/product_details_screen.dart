@@ -45,7 +45,6 @@ class ProductDetailsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
 
-                  // BRAND
                   Text(
                     brand,
                     style: TextStyle(
@@ -55,7 +54,7 @@ class ProductDetailsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
 
-                  // TITLE
+                
                   Text(
                     title,
                     style: TextStyle(
@@ -66,7 +65,7 @@ class ProductDetailsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
 
-                  // PRICE
+        
                   Text(
                     "$price RSD",
                     style: TextStyle(
@@ -77,7 +76,7 @@ class ProductDetailsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
 
-                  // DESCRIPTION
+      
                   Text(
                     "Description of the perfume:",
                     style: TextStyle(
@@ -99,7 +98,6 @@ class ProductDetailsScreen extends StatelessWidget {
 
                   const SizedBox(height: 40),
 
-                  // ADD TO CART
                   SizedBox(
                     width: double.infinity,
                     height: 50,
@@ -146,7 +144,7 @@ class ProductDetailsScreen extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  // EDIT PERFUME
+            
                   SizedBox(
                     width: double.infinity,
                     height: 50,
@@ -183,7 +181,7 @@ class ProductDetailsScreen extends StatelessWidget {
 
                   const SizedBox(height: 40),
 
-                  // REVIEWS TITLE
+               
                   Text(
                     "User reviews",
                     style: TextStyle(
@@ -195,7 +193,7 @@ class ProductDetailsScreen extends StatelessWidget {
 
                   const SizedBox(height: 16),
 
-                  // 🔥 REVIEWS IZ BAZE
+                
                   StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection('recenzije')
