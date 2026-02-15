@@ -6,6 +6,7 @@ import 'package:parfimerija_app/providers/cart_provider.dart';
 import 'package:parfimerija_app/providers/products_provider.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:parfimerija_app/providers/user_provider.dart';
+import 'package:parfimerija_app/providers/viewed_provider.dart';
 import 'package:parfimerija_app/providers/wishlist_provider.dart';
 import 'package:parfimerija_app/screens/admin/orders/order_screen_admin.dart';
 import 'package:parfimerija_app/screens/admin/perfume_management_screen.dart';
@@ -50,7 +51,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ProductsProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => WishlistProvider()),
-        //ChangeNotifierProvider(create: (_) => OrderProvider()),
+        ChangeNotifierProvider(
+  create: (_) => ViewedProvider()..loadViewed(),
+),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {

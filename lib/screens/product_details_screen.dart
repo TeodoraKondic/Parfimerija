@@ -7,6 +7,7 @@ import 'package:parfimerija_app/providers/cart_provider.dart';
 import 'package:parfimerija_app/providers/user_provider.dart';
 import 'package:parfimerija_app/screens/admin/edit_perfume.dart';
 
+import 'package:parfimerija_app/providers/viewed_provider.dart';
 class ProductDetailsScreen extends StatelessWidget {
   final String title;
   final String brand;
@@ -27,6 +28,7 @@ class ProductDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final dynamicColor = Theme.of(context).textTheme.titleLarge?.color;
+    Provider.of<ViewedProvider>(context, listen: false).addItem(title);
 
     return Scaffold(
       body: CustomScrollView(
