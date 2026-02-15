@@ -87,8 +87,8 @@ class _CardWidgetState extends State<CardWidget> {
                     const Spacer(),
                     OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 4), // Smanjujemo unutrašnji razmak
-      ),
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                      ),
                       onPressed: () async {
                         await showModalBottomSheet(
                           backgroundColor: Theme.of(
@@ -120,7 +120,8 @@ class _CardWidgetState extends State<CardWidget> {
                       ),
                       label: Text(
                         "Quantity: ${widget.product.quantity}",
-                        style: TextStyle( fontSize: 13,
+                        style: TextStyle(
+                          fontSize: 13,
                           color: isDark
                               ? AppColors.softAmber
                               : AppColors.chocolateDark,
