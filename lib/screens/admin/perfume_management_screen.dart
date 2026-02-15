@@ -45,7 +45,7 @@ class _PerfumeManagementScreenState extends State<PerfumeManagementScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text("Perfume Management"),
+        title: const Text("Perfume management"),
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
       ),
@@ -74,7 +74,7 @@ class _PerfumeManagementScreenState extends State<PerfumeManagementScreen> {
                 },
                 icon: const Icon(Icons.add),
                 label: const Text(
-                  "Add Perfume",
+                  "Add perfume",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),

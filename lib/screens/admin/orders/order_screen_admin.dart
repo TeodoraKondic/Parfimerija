@@ -17,7 +17,7 @@ class OrderManagementScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text("Orders Management (Admin)"),
+        title: const Text("Orders management"),
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
       ),
@@ -44,7 +44,7 @@ class OrderManagementScreen extends StatelessWidget {
                 },
                 icon: const Icon(Icons.add_shopping_cart),
                 label: const Text(
-                  "Add Order Manually",
+                  "Add order",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
@@ -109,9 +109,9 @@ class OrderManagementScreen extends StatelessWidget {
                                 userData['name'] ??
                                 userData['fullName'] ??
                                 userData['username'] ??
-                                "Unknown User";
+                                "Unknown user";
                           } else {
-                            userName = "Unknown User";
+                            userName = "Unknown user";
                           }
                         }
 

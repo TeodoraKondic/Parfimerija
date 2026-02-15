@@ -6,6 +6,7 @@ class Product {
   final String description;
   final String imageUrl;
   int quantity;
+  final List<Map<String, String>> reviews;
 
   Product({
     required this.id,
@@ -15,6 +16,7 @@ class Product {
     required this.description,
     required this.imageUrl,
     this.quantity = 1,
+    this.reviews = const [],
   });
 
   factory Product.fromFirestore(Map<String, dynamic> data, String id) {

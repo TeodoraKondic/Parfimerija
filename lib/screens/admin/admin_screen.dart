@@ -78,7 +78,7 @@ class AdminScreen extends StatelessWidget {
               context,
               icon: Icons.shopping_bag,
               title: "Orders management",
-              subtitle: "Edit or delete orders",
+              subtitle: "Add, edit or delete orders",
               isDark: isDark,
               onTap: () {
                 Navigator.push(
@@ -94,7 +94,7 @@ class AdminScreen extends StatelessWidget {
               context,
               icon: Icons.rate_review,
               title: "Reviews management",
-              subtitle: "Add, edit or delete reviews",
+              subtitle: "Edit or delete reviews",
               isDark: isDark,
               onTap: () {
                 Navigator.push(

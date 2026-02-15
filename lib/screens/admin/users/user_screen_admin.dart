@@ -21,7 +21,7 @@ class UserManagementScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text("User Management"),
+        title: const Text("User management"),
         centerTitle: true,
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
@@ -61,7 +61,7 @@ class UserManagementScreen extends StatelessWidget {
                 },
                 icon: const Icon(Icons.person_add_alt_1),
                 label: const Text(
-                  "Add new user",
+                  "Add user",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),

@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
 import 'package:parfimerija_app/models/product.dart';
 import 'package:parfimerija_app/providers/cart_provider.dart';
@@ -27,25 +27,6 @@ class ProductDetailsScreen extends StatelessWidget {
     Provider.of<CartProvider>(context);
     final dynamicColor = Theme.of(context).textTheme.titleLarge?.color;
 
-    // HARDKODOVANE RECENZIJE (simulacija)
-    final reviews = [
-      {
-        "user": "Ana Petrović",
-        "rating": "10",
-        "text": "Amazing scent, lasts long!",
-      },
-      {
-        "user": "Marko Jovanović",
-        "rating": "8",
-        "text": "Fresh and powerful, perfect for everyday use.",
-      },
-      {
-        "user": "Jovana Lukić",
-        "rating": "9",
-        "text": "Very elegant and sweet perfume.",
-      },
-    ];
-
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -56,12 +37,14 @@ class ProductDetailsScreen extends StatelessWidget {
               background: Image.network(image, fit: BoxFit.cover),
             ),
           ),
+
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+
                   // BRAND
                   Text(
                     brand,
@@ -104,6 +87,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
+
                   Text(
                     description,
                     style: TextStyle(
@@ -128,31 +112,32 @@ class ProductDetailsScreen extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        final cartProvider = Provider.of<CartProvider>(
+                        final cartProvider =
+                            Provider.of<CartProvider>(
                           context,
                           listen: false,
                         );
 
                         final productToAdd = Product(
-                          id: DateTime.now()
-                              .toString(), 
+                          id: DateTime.now().toString(),
                           name: title,
                           price: double.parse(price),
                           imageUrl: image,
                           brand: brand,
                           description: description,
-                          
                         );
 
                         cartProvider.addProduct(productToAdd);
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              // ignore: unnecessary_brace_in_string_interps
-                              content: Text("${title} added to cart!"),
-                              duration: const Duration(seconds: 1),
-                            ),
-                          );
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(
+                          SnackBar(
+                            content:
+                                Text("$title added to cart!"),
+                            duration:
+                                const Duration(seconds: 1),
+                          ),
+                        );
                       },
                       icon: const Icon(Icons.shopping_bag),
                       label: const Text("Add to cart"),
@@ -161,23 +146,27 @@ class ProductDetailsScreen extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  // EDIT PERFUME (ADMIN)
+                  // EDIT PERFUME
                   SizedBox(
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.chocolateDark,
-                        foregroundColor: AppColors.softAmber,
+                        backgroundColor:
+                            AppColors.chocolateDark,
+                        foregroundColor:
+                            AppColors.softAmber,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius:
+                              BorderRadius.circular(12),
                         ),
                       ),
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => EditPerfumeScreen(
+                            builder: (_) =>
+                                EditPerfumeScreen(
                               title: title,
                               brand: brand,
                               price: price,
@@ -203,68 +192,119 @@ class ProductDetailsScreen extends StatelessWidget {
                       color: dynamicColor,
                     ),
                   ),
+
                   const SizedBox(height: 16),
 
-                  // REVIEWS LIST
-                  reviews.isEmpty
-                      ? Text(
+                  // 🔥 REVIEWS IZ BAZE
+                  StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('recenzije')
+                        .where('perfumeName',
+                            isEqualTo: title)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+
+                      if (snapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Center(
+                          child:
+                              CircularProgressIndicator(),
+                        );
+                      }
+
+                      if (!snapshot.hasData ||
+                          snapshot.data!.docs.isEmpty) {
+                        return Text(
                           "No reviews yet.",
-                          style: TextStyle(color: dynamicColor),
-                        )
-                      : Column(
-                          children: reviews.map((review) {
-                            return Container(
-                              width: double.infinity,
-                              margin: const EdgeInsets.only(bottom: 12),
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).cardColor,
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.05),
-                                    blurRadius: 6,
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        review["user"]!,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                          color: dynamicColor,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${review["rating"]}/10",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: dynamicColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    review["text"]!,
-                                    style: TextStyle(
-                                      color: dynamicColor?.withValues(
-                                        alpha: 0.8,
+                          style: TextStyle(
+                              color: dynamicColor),
+                        );
+                      }
+
+                      final reviews =
+                          snapshot.data!.docs;
+
+                      return Column(
+                        children: reviews.map((doc) {
+                          final data = doc.data()
+                              as Map<String, dynamic>;
+
+                          return Container(
+                            width: double.infinity,
+                            margin:
+                                const EdgeInsets.only(
+                                    bottom: 12),
+                            padding:
+                                const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .cardColor,
+                              borderRadius:
+                                  BorderRadius.circular(
+                                      12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black
+                                      .withValues(
+                                          alpha: 0.05),
+                                  blurRadius: 6,
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment:
+                                  CrossAxisAlignment
+                                      .start,
+                              children: [
+
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment
+                                          .spaceBetween,
+                                  children: [
+                                    Text(
+                                      data["userName"] ??
+                                          "Unknown user",
+                                      style: TextStyle(
+                                        fontWeight:
+                                            FontWeight
+                                                .bold,
+                                        fontSize: 16,
+                                        color:
+                                            dynamicColor,
                                       ),
                                     ),
+                                    Text(
+                                      "${data["rating"]}/10",
+                                      style: TextStyle(
+                                        fontWeight:
+                                            FontWeight
+                                                .bold,
+                                        color:
+                                            dynamicColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                const SizedBox(
+                                    height: 8),
+
+                                Text(
+                                  data["reviewText"] ?? "",
+                                  style: TextStyle(
+                                    color: dynamicColor
+                                        ?.withValues(
+                                            alpha: 0.8),
                                   ),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    },
+                  ),
 
                   const SizedBox(height: 60),
                 ],
@@ -276,3 +316,4 @@ class ProductDetailsScreen extends StatelessWidget {
     );
   }
 }
+
