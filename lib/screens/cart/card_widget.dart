@@ -4,6 +4,7 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:parfimerija_app/const/app_colors.dart';
 //import 'package:parfimerija_app/const/app_consts.dart';
 import 'package:parfimerija_app/models/product.dart';
+import 'package:parfimerija_app/providers/cart_provider.dart';
 import 'package:parfimerija_app/providers/theme_providers.dart';
 import 'package:parfimerija_app/screens/cart/quantity_btm_sheet.dart';
 import 'package:parfimerija_app/widgets/subtitle_text.dart';
@@ -12,7 +13,7 @@ import 'package:provider/provider.dart';
 
 class CardWidget extends StatefulWidget {
   const CardWidget({super.key, required this.product});
-  final Product product; 
+  final Product product;
 
   @override
   State<CardWidget> createState() => _CardWidgetState();
@@ -40,7 +41,6 @@ class _CardWidgetState extends State<CardWidget> {
               width: size.height * 0.15,
               boxFit: BoxFit.contain,
             ),
-            
           ),
           const SizedBox(width: 10),
 
@@ -99,7 +99,13 @@ class _CardWidgetState extends State<CardWidget> {
                           ),
                           context: context,
                           builder: (context) {
-                            return const QuantityBottomSheetWidget();
+                            return QuantityBottomSheetWidget(
+                              product: widget.product,
+                              cartProvider: Provider.of<CartProvider>(
+                                context,
+                                listen: false,
+                              ),
+                            );
                           },
                         );
                       },
@@ -109,28 +115,12 @@ class _CardWidgetState extends State<CardWidget> {
                             ? AppColors.softAmber
                             : AppColors.chocolateDark,
                       ),
-                      /*label: Text(
-                        "Quantity: 5",
+                      label: Text(
+                        "Quantity: ${widget.product.quantity}",
                         style: TextStyle(
                           color: isDark
                               ? AppColors.softAmber
                               : AppColors.chocolateDark,
-                        ),
-                      ),*/
-                      label: Text("Quantity: ${widget.product.quantity}",style: TextStyle(
-                          color: isDark
-                              ? AppColors.softAmber
-                              : AppColors.chocolateDark,
-                        ),),
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(
-                          width: 1,
-                          color: isDark
-                              ? AppColors.softAmber
-                              : AppColors.chocolateDark,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
                         ),
                       ),
                     ),

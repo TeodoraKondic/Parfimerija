@@ -23,6 +23,13 @@ class CartProvider extends ChangeNotifier {
     _items.clear();
     notifyListeners();
   }
+  void updateQuantity(Product product, int quantity) {
+  final index = _items.indexWhere((p) => p.id == product.id);
+  if (index != -1) {
+    _items[index].quantity = quantity;
+    notifyListeners();
+  }
+}
 
   // Ukupan broj proizvoda
   int get itemCount => _items.length;
@@ -30,4 +37,5 @@ class CartProvider extends ChangeNotifier {
   // Ukupna cena
   double get totalPrice =>
       _items.fold(0, (sum, item) => sum + item.price);
+
 }
